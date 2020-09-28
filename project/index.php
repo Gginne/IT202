@@ -1,3 +1,7 @@
+<?php 
+    require_once(__DIR__. "/../dbtest/dbtest.php");
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,8 +12,8 @@
 </head>
 <body>
     <h1>Store202</h1>
-    <button><a href="/register.php">Register</a></button>
-    <button>Login</button>
+    <button><a href="/IT202/loginreg/register.php">Register</a></button>
+    <button><a href="/IT202/loginreg/login.php">Login</a></button>
 </body>
 </html>
 
