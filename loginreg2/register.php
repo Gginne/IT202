@@ -30,6 +30,11 @@
             $isValid = false;
         }
 
+        if(!strpos($email, "@")){
+            $errMsg = "<br>Invalid email<br>";
+            $isValid = false;   
+        }
+
         if($password !== $confirm){
             $errMsg = "Passwords must match <br>";
             $isValid = false;
