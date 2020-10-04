@@ -30,7 +30,7 @@
             $isValid = false;
         }
 
-        if($password != $confirm){
+        if($password !== $confirm){
             $errMsg = "Passwords must match <br>";
             $isValid = false;
         }

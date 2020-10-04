@@ -11,62 +11,67 @@
 
 <?php 
 
-    if(isset($_POST["login"])){
-        
-        $email = isset($_POST["email"]) ? $_POST["email"] : null;
-        $password = isset($_POST["password"] ) ? $_POST["password"] : null;
-        $isValid = true;
-       
-        if(!isset($email) || !isset($password)){
-            $isValid = false;
-        }
+if(isset($_POST["login"])){
 
-        if($email == "" || $password == ""){
-            echo "Missing fields <br>";
-            $isValid = false;
-        }
+    $email = isset($_POST["email"]) ? $_POST["email"] : null;
+    $password = isset($_POST["password"] ) ? $_POST["password"] : null;
+    $isValid = true;
 
-        if(!strpos($email, "@")){
-            $isValid = false;
-             echo "<br>Invalid email<br>";
-           }
+    if(!isset($email) || !isset($password)){
+        $isValid = false;
+    }
 
-        if($isValid){
-            $db = getDB();
-            if(isset($db)){
-                //here we'll use placeholders to let PDO map and sanitize our data
-                $stmt = $db->prepare("SELECT email, password from Users WHERE email = :email LIMIT 1");
-                //here's the data map for the parameter to data
-                $params = array(":email"=>$email);
-                $r = $stmt->execute($params);
-                //let's just see what's returned
-                $e = $stmt->errorInfo();
-                if($e[0] != "00000"){
-                    echo "uh oh something went wrong: " . var_export($e, true);
-                }
+    if($email == "" || $password == ""){
+        echo "Missing fields <br>";
+        $isValid = false;
+    }
 
-                //we'll tell pdo to give it to us as an associative array
-                $result = $stmt->fetch(PDO::FETCH_ASSOC);
-                if($result && isset($result["password"])){
-                    $password_hash_from_db = $result["password"];
-                    if(password_verify($password, $password_hash_from_db)){
+    if(!strpos($email, "@")){
+        $isValid = false;
+         echo "<br>Invalid email<br>";
+       }
 
-                    //Save current user login to session
+    if($isValid){
+        $db = getDB();
+        if(isset($db)){
+            //here we'll use placeholders to let PDO map and sanitize our data
+            $stmt = $db->prepare("SELECT email, password from Users WHERE email = :email LIMIT 1");
+            //here's the data map for the parameter to data
+            $params = array(":email"=>$email);
+            $r = $stmt->execute($params);
+            //let's just see what's returned
+            $e = $stmt->errorInfo();
+            if($e[0] != "00000"){
+                echo "uh oh something went wrong: " . var_export($e, true);
+            }
+
+            //we'll tell pdo to give it to us as an associative array
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            if($result && isset($result["password"])){
+                $password_hash_from_db = $result["password"];
+                if(password_verify($password, $password_hash_from_db)){
+
+                    //Start session
                     session_start();
+                    //Unset password from result array
                     unset($result["password"]);
+                    //Save current user login to session
                     $_SESSION["user"] = $result;
-                    
                     //Login message
-                    echo "<br>Welcome! You're logged!<br>"; 
-                    }
-                   
-                } else{ 
-                    echo "<br>Invalid user<br>";
+                    echo "<br>Welcome! You're logged!<br>";
+                    echo "<pre>" . var_export($_SESSION, true) . "</pre>";
+                    //Redirect home
+                    header("Location: home.php");
+                } else {
+                    echo "<br>Invalid password, get out!<br>";
                 }
+            } else {
+                echo "<br>Invalid user<br>";
             }
         }
-        else {
-            echo "There was a validation issue";
-        }
+    } else {
+        echo "There was a validation issue";
     }
+}
 ?>
+
