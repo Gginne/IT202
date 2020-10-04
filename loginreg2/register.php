@@ -45,7 +45,7 @@
                 $params = array(":email"=>$email, ":password"=>$hash);
                 $r = $stmt->execute($params);
 
-                $login = "<a href='/IT202/loginreg/login.php'>login</a>";
+                $login = "<a href='login.php'>login</a>";
                 $e = $stmt->errorInfo();
                 if($e[0] == "00000"){
                     echo "<br>Welcome! You successfully registered, please {$login}.";
