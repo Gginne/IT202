@@ -7,9 +7,10 @@
     <title>Store202</title>
 </head>
 <body>
+
+    <?php require_once(__DIR__ . "/partials/nav.php"); ?>
     <h1>Store202</h1>
-    <button><a href="/IT202/loginreg/register.php">Register</a></button>
-    <button><a href="/IT202/loginreg/login.php">Login</a></button>
+   
 </body>
 </html>
 
