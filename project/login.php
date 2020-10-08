@@ -9,14 +9,9 @@
 
 <?php
 if (isset($_POST["login"])) {
-    $email = null;
-    $password = null;
-    if (isset($_POST["email"])) {
-        $email = $_POST["email"];
-    }
-    if (isset($_POST["password"])) {
-        $password = $_POST["password"];
-    }
+    $email = isset($_POST["email"]) ? $_POST["email"] : null;
+    $password = isset($_POST["password"]) ? $_POST["password"] : null;
+   
     $isValid = true;
     if (!isset($email) || !isset($password)) {
         $isValid = false;

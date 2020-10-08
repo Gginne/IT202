@@ -10,27 +10,17 @@
 </form>
 <?php
 if (isset($_POST["register"])) {
-    $email = null;
-    $password = null;
-    $confirm = null;
-    if (isset($_POST["email"])) {
-        $email = $_POST["email"];
-    }
-    if (isset($_POST["password"])) {
-        $password = $_POST["password"];
-    }
-    if (isset($_POST["confirm"])) {
-        $confirm = $_POST["confirm"];
-    }
+    $email = isset($_POST["email"]) ? $_POST["email"] : null;
+    $password = isset($_POST["password"]) ? $_POST["password"] : null;
+    $confirm = isset($_POST["confirm"]) ? $_POST["confirm"] : null;
+  
     $isValid = true;
     //check if passwords match on the server side
-    if ($password == $confirm) {
-        echo "Passwords match <br>";
-    }
-    else {
+    if ($password !== $confirm) {
         echo "Passwords don't match<br>";
         $isValid = false;
     }
+
     if (!isset($email) || !isset($password) || !isset($confirm)) {
         $isValid = false;
     }
@@ -49,7 +39,8 @@ if (isset($_POST["register"])) {
             echo "db returned: " . var_export($r, true);
             $e = $stmt->errorInfo();
             if ($e[0] == "00000") {
-                echo "<br>Welcome! You successfully registered, please login.";
+                $login = "<a href='login.php'>login</a>";
+                echo "<br>Welcome! You successfully registered, please $login.";
             }
             else {
                 echo "uh oh something went wrong: " . var_export($e, true);
