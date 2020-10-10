@@ -1,21 +1,18 @@
 <?php require_once(__DIR__ . "/partials/header.php"); ?>
 
-<p class="display-4 text-center text-info">Login</p>
-<form method="POST" class="mx-auto w-75">
-  <div class="form-group">
-    <label for="email">Email:</label>
-    <input type="email" class="form-control" name="email" id="email" placeholder="Enter email" required>
-  </div>
-  <div class="form-group">
-    <label for="p1">Password: </label>
-    <input type="password" class="form-control" name="password" id="p1" placeholder="Password" required>
-  </div>
-  <div class="form-group">
-  <input type="submit" class="btn btn-primary" name="login" value="Login" />
-  </div>
+<h2>Login</h2>
+<br/>
+<form method="POST">
+    <label for="email">Email:</label><br>
+    <input type="email" id="email" name="email" required/>
+    <br><br>
+    <label for="p1">Password:</label><br>
+    <input type="password" id="p1" name="password" required/>
+    <br><br>
+    <input type="submit" name="login" value="Login"/>
 </form>
-
-<div class="text-center">
+<br>
+<div>
 <?php
 if (isset($_POST["login"])) {
     $email = isset($_POST["email"]) ? $_POST["email"] : null;

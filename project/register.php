@@ -1,25 +1,22 @@
 <?php require_once(__DIR__ . "/partials/header.php"); ?>
 
-<p class="display-4 text-center text-info">Register</p>
-<form method="POST" class="mx-auto w-75">
-  <div class="form-group">
-    <label for="email">Email:</label>
-    <input type="email" class="form-control" name="email"  id="email" placeholder="Enter email" required>
-  </div>
-  <div class="form-group">
-    <label for="p1">Password: </label>
-    <input type="password" class="form-control" name="password" id="p1" placeholder="Enter password" required>
-  </div>
-  <div class="form-group">
-    <label for="p2">Confirm: </label>
-    <input type="password" class="form-control" name="confirm" id="p2" placeholder="Confirm password" required>
-  </div>
-  <div class="form-group">
-  <input type="submit" class="btn btn-primary" name="register" value="Register" />
-  </div>
+<h2>Register</h2>
+<br/>
+<form method="POST">
+    <label for="email">Email:</label><br>
+    <input type="email" id="email" name="email" required/>
+    <br><br>
+    <label for="p1">Password:</label><br>
+    <input type="password" id="p1" name="password" required/>
+    <br><br>
+    <label for="p2">Confirm Password:</label><br>
+    <input type="password" id="p2" name="confirm" required/>
+    <br><br>
+    <input type="submit" name="register" value="Register"/>
 </form>
+<br>
 
-<div class="text-center">
+<div>
 <?php
 if (isset($_POST["register"])) {
     $email = isset($_POST["email"]) ? $_POST["email"] : null;

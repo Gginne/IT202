@@ -9,6 +9,6 @@
 </head>
 <body>
 
+<?php require_once("nav.php") ?>
 
 <div class="container">
-<?php require_once("nav.php") ?>
