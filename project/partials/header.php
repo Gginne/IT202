@@ -22,6 +22,8 @@
 
     nav .brand{
         font-size: 20px;
+        border: 3px solid #333;
+        padding: 7px;
     }
     
     nav ul{
@@ -31,6 +33,10 @@
 
     nav ul li{
         margin: .5rem;
+    }
+
+    nav ul li a{
+        text-decoration: none;
     }
 
     </style>
