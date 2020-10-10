@@ -1,6 +1,7 @@
 
-<?php require_once(__DIR__ . "/partials/nav.php"); ?>
+<?php require_once(__DIR__ . "/partials/header.php"); ?>
 
+<div class="text-center">
 <?php 
 session_unset();
 // destroy the session
@@ -10,3 +11,6 @@ echo "<pre>" . var_export($_SESSION, true) . "</pre>";
 ?>
 
 <a href="home.php">Home</a>
+</div>
+
+<?php require_once(__DIR__ . "/partials/footer.php"); ?>

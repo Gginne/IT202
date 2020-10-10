@@ -1,12 +1,21 @@
-<?php require_once(__DIR__ . "/partials/nav.php"); ?>
-<form method="POST">
+<?php require_once(__DIR__ . "/partials/header.php"); ?>
+
+<p class="display-4 text-center text-info">Login</p>
+<form method="POST" class="mx-auto w-75">
+  <div class="form-group">
     <label for="email">Email:</label>
-    <input type="email" id="email" name="email" required/>
-    <label for="p1">Password:</label>
-    <input type="password" id="p1" name="password" required/>
-    <input type="submit" name="login" value="Login"/>
+    <input type="email" class="form-control" name="email" id="email" placeholder="Enter email" required>
+  </div>
+  <div class="form-group">
+    <label for="p1">Password: </label>
+    <input type="password" class="form-control" name="password" id="p1" placeholder="Password" required>
+  </div>
+  <div class="form-group">
+  <input type="submit" class="btn btn-primary" name="login" value="Login" />
+  </div>
 </form>
 
+<div class="text-center">
 <?php
 if (isset($_POST["login"])) {
     $email = isset($_POST["email"]) ? $_POST["email"] : null;
@@ -67,3 +76,5 @@ SELECT Roles.name FROM Roles JOIN UserRoles on Roles.id = UserRoles.role_id wher
     }
 }
 ?>
+</div>
+<?php require_once(__DIR__ . "/partials/footer.php"); ?>
