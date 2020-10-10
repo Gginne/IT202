@@ -1,5 +1,6 @@
 <?php require_once(__DIR__ . "/partials/header.php"); ?>
 
+
 <h2>Login</h2>
 <br/>
 <form method="POST">
@@ -29,7 +30,7 @@ if (isset($_POST["login"])) {
     if ($isValid) {
         $db = getDB();
         if (isset($db)) {
-            $stmt = $db->prepare("SELECT id, email, password from Users WHERE email = :email LIMIT 1");
+            $stmt = $db->prepare("SELECT id, email, username, password from Users WHERE email = :email LIMIT 1");
 
             $params = array(":email" => $email);
             $r = $stmt->execute($params);
@@ -74,4 +75,6 @@ SELECT Roles.name FROM Roles JOIN UserRoles on Roles.id = UserRoles.role_id wher
 }
 ?>
 </div>
+
+
 <?php require_once(__DIR__ . "/partials/footer.php"); ?>

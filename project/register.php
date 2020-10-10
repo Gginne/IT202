@@ -1,25 +1,10 @@
 <?php require_once(__DIR__ . "/partials/header.php"); ?>
 
-<h2>Register</h2>
-<br/>
-<form method="POST">
-    <label for="email">Email:</label><br>
-    <input type="email" id="email" name="email" required/>
-    <br><br>
-    <label for="p1">Password:</label><br>
-    <input type="password" id="p1" name="password" required/>
-    <br><br>
-    <label for="p2">Confirm Password:</label><br>
-    <input type="password" id="p2" name="confirm" required/>
-    <br><br>
-    <input type="submit" name="register" value="Register"/>
-</form>
-<br>
-
 <div>
 <?php
 if (isset($_POST["register"])) {
     $email = isset($_POST["email"]) ? $_POST["email"] : null;
+    $username = isset($_POST["username"]) ? $_POST["username"] : null;
     $password = isset($_POST["password"]) ? $_POST["password"] : null;
     $confirm = isset($_POST["confirm"]) ? $_POST["confirm"] : null;
   
@@ -40,9 +25,9 @@ if (isset($_POST["register"])) {
         $db = getDB();
         if (isset($db)) {
             //here we'll use placeholders to let PDO map and sanitize our data
-            $stmt = $db->prepare("INSERT INTO Users(email, password) VALUES(:email, :password)");
+            $stmt = $db->prepare("INSERT INTO Users(email, username, password) VALUES(:email, :username, :password)");
             //here's the data map for the parameter to data
-            $params = array(":email" => $email, ":password" => $hash);
+            $params = array(":email" => $email, ":username" => $username, ":password" => $hash);
             $r = $stmt->execute($params);
             //let's just see what's returned
             echo "db returned: " . var_export($r, true);
@@ -52,7 +37,11 @@ if (isset($_POST["register"])) {
                 echo "<br>Welcome! You successfully registered, please $login.";
             }
             else {
-                echo "uh oh something went wrong: " . var_export($e, true);
+                if($e[0] == "23000"){
+                    echo "<br>Either username or email is already registered, please try again";
+                } else {
+                    echo "uh oh something went wrong: " . var_export($e, true);
+                }
             }
         }
     }
@@ -62,4 +51,23 @@ if (isset($_POST["register"])) {
 }
 ?>
 </div>
+
+<h2>Register</h2>
+<br/>
+<form method="POST">
+    <label for="email">Email:</label><br>
+    <input type="email" id="email" name="email" required/>
+    <br><br>
+    <label for="user">Username:</label><br>
+    <input type="text" id="user" name="username" maxlength="60" value="<?php safer_echo($username); ?>" required/>
+    <br><br>
+    <label for="p1">Password:</label><br>
+    <input type="password" id="p1" name="password" required/>
+    <br><br>
+    <label for="p2">Confirm Password:</label><br>
+    <input type="password" id="p2" name="confirm" required/>
+    <br><br>
+    <input type="submit" name="register" value="Register"/>
+</form>
+<br>
 <?php require_once(__DIR__ . "/partials/footer.php"); ?>
