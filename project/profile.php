@@ -52,7 +52,7 @@ if (isset($_POST["saved"])) {
             }
         }
         if ($inUse > 0) {
-            echo "Username is already in use";
+            echo "<br>Username is already in use";
             //for now we can just stop the rest of the update
             $isValid = false;
         }
