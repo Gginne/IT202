@@ -110,17 +110,17 @@ if (isset($_POST["saved"])) {
 <h2><?= get_username() ?>'s Profile</h2>
 <form method="POST">
     <label for="email">Email</label><br>
-    <input type="email" name="email" value="<?php safer_echo(get_email()); ?>" required>
+    <input type="email" name="email" value="<?php safer_echo(get_email()); ?>" >
     <br><br>
     <label for="username">Username</label><br>
-    <input type="text" maxlength="60" name="username" value="<?php safer_echo(get_username()); ?>" required/>
+    <input type="text" maxlength="60" name="username" value="<?php safer_echo(get_username()); ?>" />
     <br><br>
     <!-- DO NOT PRELOAD PASSWORD-->
     <label for="pw">Password</label><br>
-    <input type="password" name="password" required/>
+    <input type="password" name="password" />
     <br><br>
     <label for="cpw">Confirm Password</label><br>
-    <input type="password" name="confirm" required/>
+    <input type="password" name="confirm" />
     <br><br>
     <input type="submit" name="saved" value="Save Profile"/>
 </form>
