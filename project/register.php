@@ -11,7 +11,7 @@ if (isset($_POST["register"])) {
     $isValid = true;
     //check if passwords match on the server side
     if ($password !== $confirm) {
-        echo "Passwords don't match<br>";
+        flash("Passwords don't match");
         $isValid = false;
     }
 
@@ -34,20 +34,27 @@ if (isset($_POST["register"])) {
             $e = $stmt->errorInfo();
             if ($e[0] == "00000") {
                 $login = "<a href='login.php'>login</a>";
-                echo "<br>Welcome! You successfully registered, please $login.";
+                flash("Welcome! You successfully registered, please $login.");
             }
             else {
                 if($e[0] == "23000"){
-                    echo "<br>Either username or email is already registered, please try again";
+                    flash("Either username or email is already registered, please try again");
                 } else {
-                    echo "uh oh something went wrong: " . var_export($e, true);
+                    flash("An error occurred, please try again");
                 }
             }
         }
     }
     else {
-        echo "There was a validation issue";
+        flash("There was a validation issue");
     }
+}
+
+if (!isset($email)) {
+    $email = "";
+}
+if (!isset($username)) {
+    $username = "";
 }
 ?>
 </div>
@@ -70,4 +77,5 @@ if (isset($_POST["register"])) {
     <input type="submit" name="register" value="Register"/>
 </form>
 <br>
+<?php require(__DIR__ . "/partials/flash.php"); ?>
 <?php require_once(__DIR__ . "/partials/footer.php"); ?>
