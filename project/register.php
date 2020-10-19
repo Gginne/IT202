@@ -63,7 +63,7 @@ if (!isset($username)) {
 <br/>
 <form method="POST">
     <label for="email">Email:</label><br>
-    <input type="email" id="email" name="email" required/>
+    <input type="email" id="email" name="email" value="<?php safer_echo($email); ?>" required/>
     <br><br>
     <label for="user">Username:</label><br>
     <input type="text" id="user" name="username" maxlength="60" value="<?php safer_echo($username); ?>" required />
