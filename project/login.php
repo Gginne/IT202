@@ -4,8 +4,8 @@
 <h2>Login</h2>
 <br/>
 <form method="POST">
-    <label for="email">Email:</label><br>
-    <input type="email" id="email" name="email" required/>
+    <label for="user">Username or Email:</label><br>
+    <input type="text" id="user" name="user"/>
     <br><br>
     <label for="p1">Password:</label><br>
     <input type="password" id="p1" name="password" required/>
@@ -16,24 +16,21 @@
 <div>
 <?php
 if (isset($_POST["login"])) {
-    $email = isset($_POST["email"]) ? $_POST["email"] : null;
+    $user = isset($_POST["user"]) ? $_POST["user"] : null;
     $password = isset($_POST["password"]) ? $_POST["password"] : null;
    
     $isValid = true;
-    if (!isset($email) || !isset($password)) {
+    if (!isset($user) && !isset($password)) {
         $isValid = false;
-        flash("Email or password missing");
+        flash("Missing fields");
     }
-    if (!strpos($email, "@")) {
-        $isValid = false;
-        flash("<br>Invalid email<br>");
-    }
+   
     if ($isValid) {
         $db = getDB();
         if (isset($db)) {
-            $stmt = $db->prepare("SELECT id, email, username, password from Users WHERE email = :email LIMIT 1");
+            $stmt = $db->prepare("SELECT id, email, username, password from Users WHERE email = :user OR username = :user LIMIT 1");
 
-            $params = array(":email" => $email);
+            $params = array(":user" => $user);
             $r = $stmt->execute($params);
             echo "db returned: " . var_export($r, true);
             $e = $stmt->errorInfo();
@@ -67,7 +64,7 @@ SELECT Roles.name FROM Roles JOIN UserRoles on Roles.id = UserRoles.role_id wher
                 }
             }
             else {
-                flash("<br>Invalid user<br>");
+                flash("<br>Invalid username or email<br>");
             }
         }
     }
