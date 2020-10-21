@@ -29,8 +29,6 @@ if (isset($_POST["register"])) {
             //here's the data map for the parameter to data
             $params = array(":email" => $email, ":username" => $username, ":password" => $hash);
             $r = $stmt->execute($params);
-            //let's just see what's returned
-            echo "db returned: " . var_export($r, true);
             $e = $stmt->errorInfo();
             if ($e[0] == "00000") {
                 $login = "<a href='login.php'>login</a>";
@@ -63,16 +61,16 @@ if (!isset($username)) {
 <br/>
 <form method="POST">
     <label for="email">Email:</label><br>
-    <input type="email" id="email" name="email" value="<?php safer_echo($email); ?>" required/>
+    <input type="email" id="email" name="email" maxlength="60" value="<?php safer_echo($email); ?>" required/>
     <br><br>
     <label for="user">Username:</label><br>
     <input type="text" id="user" name="username" maxlength="60" value="<?php safer_echo($username); ?>" required />
     <br><br>
     <label for="p1">Password:</label><br>
-    <input type="password" id="p1" name="password" maxlength="60" required/>
+    <input type="password" id="p1" name="password" minlength="6" maxlength="60" required/>
     <br><br>
     <label for="p2">Confirm Password:</label><br>
-    <input type="password" id="p2" name="confirm" maxlength="60" required/>
+    <input type="password" id="p2" name="confirm" minlength="6" maxlength="60" required/>
     <br><br>
     <input type="submit" name="register" value="Register"/>
 </form>

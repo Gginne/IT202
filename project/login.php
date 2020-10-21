@@ -5,7 +5,7 @@
 <br/>
 <form method="POST">
     <label for="user">Username or Email:</label><br>
-    <input type="text" id="user" name="user"/>
+    <input type="text" id="user" name="user" maxlength="60" required/>
     <br><br>
     <label for="p1">Password:</label><br>
     <input type="password" id="p1" name="password" required/>
@@ -32,7 +32,6 @@ if (isset($_POST["login"])) {
 
             $params = array(":user" => $user);
             $r = $stmt->execute($params);
-            echo "db returned: " . var_export($r, true);
             $e = $stmt->errorInfo();
             if ($e[0] != "00000") {
                 flash("Something went wrong, please try again");
