@@ -238,6 +238,7 @@ function draw() {
       
       if (isColliding(bullet, enemy) && enemy.health == 0) {
         enemies.splice(i, 1);
+        soundFX("enemyDeath");
         score++;
         shooting = false;
         // Make the game harder
