@@ -3,7 +3,7 @@ var canvas = document.getElementById('canvas');
 var context = canvas.getContext('2d');
 
 // Create an object representing a square on the canvas
-function makeSquare(x, y, length, speed, health=1, type="normal") {
+function makeSquare(x, y, length, speed, health=1, type="ship", move="normal") {
   return {
     x: x,
     y: y,
@@ -11,14 +11,28 @@ function makeSquare(x, y, length, speed, health=1, type="normal") {
     s: speed,
     health: health,
     type: type,
+    move: move,
     draw: function() {
-      context.fillRect(this.x, this.y, this.l, this.l);
+      
+      context.font=`${this.l*1.5}px FontAwesome`;
+      context.textAlign = 'center';
+      context.textBaseline = "middle";
+      if(type == "ship"){
+        context.fillText(String.fromCharCode("0xf197"),this.x+this.l/2,this.y+this.l/2);
+      } else if(type == "enemy"){
+        context.fillText(String.fromCharCode("0xf188"),this.x+this.l/2,this.y+this.l/2);
+      } else if(type == "bullet"){
+        context.fillText(String.fromCharCode("0xf0da"),this.x+this.l/2,this.y+this.l/2);
+      }
+      
+  
+      
     }
   };
 }
 
 // The ship the user controls
-var ship = makeSquare(50, canvas.height / 2 - 25, 50, 5);
+var ship = makeSquare(50, canvas.height / 2 - 25, 45, 5);
 
 // Flags to tracked which keys are pressed
 var up = false;
@@ -28,7 +42,7 @@ var space = false;
 // Is a bullet already on the canvas?
 var shooting = false;
 // The bulled shot from the ship
-var bullet = makeSquare(0, 0, 10, 10);
+var bullet = makeSquare(0, 0, 15, 15, 1, "bullet");
 //MOD 1 ENEMY SHOOTS
 var enemyBullet = makeSquare(0, 0, 10, 10);
 // An array for enemies (in case there are more than one)
@@ -37,15 +51,15 @@ var enemies = [];
 // Add an enemy object to the array
 var enemyBaseSpeed = 2; 
 function makeEnemy() {
-  var type = Math.random() < 0.4 ? "diagonal" : "normal";
+  var move = Math.random() < 0.4 ? "diagonal" : "normal";
   
   var enemySize = Math.round((Math.random() * 15)) + 15;
-  var enemySpeed = (type == "diagonal" && Math.random() < 0.5 ? -1 : 1)*((Math.round(Math.random() * enemyBaseSpeed)) + enemyBaseSpeed)
-  var enemyX = type == "diagonal" ? canvas.width-enemySize*5 : canvas.width;
+  var enemySpeed = (move == "diagonal" && Math.random() < 0.5 ? -1 : 1)*((Math.round(Math.random() * enemyBaseSpeed)) + enemyBaseSpeed)
+  var enemyX = move == "diagonal" ? canvas.width-enemySize*5 : canvas.width;
   
-  var enemyY = type == "diagonal" ? (enemySpeed > 0 ? (canvas.height - enemySize) : 0) : Math.round(Math.random() * (canvas.height - enemySize * 2)) + enemySize;
+  var enemyY = move == "diagonal" ? (enemySpeed > 0 ? (canvas.height - enemySize) : 0) : Math.round(Math.random() * (canvas.height - enemySize * 2)) + enemySize;
   var enemyHealth = Math.floor(score/5) + 1
-  enemies.push(makeSquare(enemyX, enemyY, enemySize, enemySpeed, enemyHealth, type));
+  enemies.push(makeSquare(enemyX, enemyY, enemySize, enemySpeed, enemyHealth, "enemy", move));
 }
 
 // Check if number a is in the range b to c (exclusive)
@@ -162,7 +176,7 @@ function shoot() {
     shooting = true;
     soundFX("shoot")
     bullet.x = ship.x + ship.l;
-    bullet.y = ship.y + ship.l / 2;
+    bullet.y = ship.y + ship.l/2;
   }
 }
 
@@ -173,9 +187,9 @@ function draw() {
   // Move and draw the enemies
   enemies.forEach(function(enemy) {
 
-    if (enemy.type === "normal") {
+    if (enemy.move === "normal") {
       enemy.x -= enemy.s; 
-    } else if(enemy.type === "diagonal"){
+    } else if(enemy.move === "diagonal"){
       enemy.x -= Math.abs(enemy.s) ;
       enemy.y -= enemy.s;
     }
