@@ -1,4 +1,4 @@
-<?php require_once(__DIR__ . "../partials/header.php"); ?>
+<?php require_once(__DIR__ . "/partials/header.php"); ?>
 <?php
 if (!has_role("Admin")) {
     //this will redirect to login and kill the rest of this script (prevent it from executing)
@@ -8,14 +8,18 @@ if (!has_role("Admin")) {
 ?>
 
 <form method="POST">
-	<label for="name">Name</label>
+	<label for="name">Name</label><br>
 	<input name="name" placeholder="Name"/>
-	<label for="quantity">Quantity</label>
-	<input type="number" name="quantity"/>
-	<label for="price">Price</label>
-	<input type="number" name="price" step="0.01"/>
-	<label for="description">Description</label>
-    <textarea name="description" rows="4" cols="50"></textarea>
+	<br><br>
+	<label for="quantity">Quantity</label><br>
+	<input type="number" name="quantity" placeholder="Quantity"/>
+	<br><br>
+	<label for="price">Price</label><br>
+	<input type="number" name="price" step="0.01" placeholder="Price"/>
+	<br><br>
+	<label for="description">Description</label><br>
+	<textarea name="description" rows="4" cols="50"></textarea>
+	<br><br>
     <input type="submit" name="save" value="save" />
 </form>
 
@@ -26,16 +30,14 @@ if(isset($_POST["save"])){
 	$quantity = $_POST["quantity"];
 	$price = $_POST["price"];
 	$desc = $_POST["description"];
-	$nst = date('Y-m-d H:i:s');//calc
 	$user = get_user_id();
 	$db = getDB();
-	$stmt = $db->prepare("INSERT INTO Products (name, quantity, price, description, next_stage_time, user_id) VALUES(:name, :quantity, :price, :desc,:nst,:user)");
+	$stmt = $db->prepare("INSERT INTO Products (name, quantity, price, description, user_id) VALUES(:name, :quantity, :price, :desc,:user)");
 	$r = $stmt->execute([
 		":name"=>$name,
 		":quantity"=>$quantity,
 		":price"=>$price,
 		":desc"=>$desc,
-		":nst"=>$nst,
 		":user"=>$user
 	]);
 	if($r){
@@ -48,4 +50,4 @@ if(isset($_POST["save"])){
 }
 ?>
 <?php require(__DIR__ . "/partials/flash.php"); ?>
-<?php require_once(__DIR__ . "../partials/footer.php"); ?>
+<?php require_once(__DIR__ . "/partials/footer.php"); ?>
