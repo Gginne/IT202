@@ -39,7 +39,7 @@ if (isset($_POST["search"]) && !empty($query)) {
                     </div>
                     <div>
                         <div>Quantity:</div>
-                        <div><?php getState($r["quantity"]); ?></div>
+                        <div><?php safer_echo($r["quantity"]); ?></div>
                     </div>
                     <div>
                         <div>Price:</div>
