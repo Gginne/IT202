@@ -76,6 +76,13 @@ function get_product_price($id){
     return $product["price"];
 }
 
+function getURL($path) {
+    if (substr($path, 0, 1) == "/") {
+        return $path;
+    }
+    return $_SERVER["CONTEXT_PREFIX"] . "/IT202/project/$path";
+}
+
 //end flash
 
 ?>
