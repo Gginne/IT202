@@ -14,7 +14,7 @@ if (isset($_POST["query"])) {
 }
 if (isset($_POST["search"]) && !empty($query)) {
     $db = getDB();
-    $stmt = $db->prepare("SELECT cart.product_id,cart.quantity,cart.id, product.name as product, Users.username from Carts as cart JOIN Users on cart.user_id = Users.id LEFT JOIN Products as product on cart.product_id = product.id WHERE cart.product_id like :q LIMIT 10");
+    $stmt = $db->prepare("SELECT cart.product_id,cart.quantity,cart.id, product.name as product, Users.username from Carts as cart JOIN Users on cart.user_id = Users.id LEFT JOIN Products as product on cart.product_id = product.id WHERE product.name like :q LIMIT 10");
     $r = $stmt->execute([":q" => "%$query%"]);
     if ($r) {
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -31,16 +31,7 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <h3>List Carts</h3>
 <form method="POST">
 <label>Product:</label>
-        <select name="query" value="<?= $query ?>">
-            <option value="-1">None</option>
-            <?php foreach ($products as $product): ?>
-                <option value="<?php safer_echo($product["id"]); ?>" 
-                <?php echo ($query == $product["id"] ? 'selected="selected"' : ''); ?>>
-                    <?php safer_echo($product["name"]); ?>
-                    -- $<?php safer_echo(get_product_price($product["id"])); ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
+<input name="query" placeholder="Search" value="<?php safer_echo($query); ?>"/>
     <input type="submit" value="Search" name="search"/>
     <br><br>
 </form>

@@ -50,7 +50,7 @@ if (isset($_POST["search"]) && !empty($query)) {
                         <div><?php safer_echo($r["description"]); ?></div>
                     </div>
                     <div>
-                        <div>Owner Id:</div>
+                        <div>Employee Id:</div>
                         <div><?php safer_echo($r["user_id"]); ?></div>
                     </div>
                     <div>

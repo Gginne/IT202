@@ -33,10 +33,11 @@ if (isset($id)) {
         </div>
         <div class="card-body">
             <div>
-                <p>Stats</p>
+                <p><b>Stats<b></p>
                 <div>Quantity: <?php safer_echo($result["quantity"]); ?></div>
                 <div>Price: <?php safer_echo($result["price"]); ?> </div>
                 <div>Description: <?php safer_echo($result["description"]); ?></div>
+                <div>Employee in Charge: <?php safer_echo($result["username"]); ?></div>
             </div>
         </div>
     </div>
