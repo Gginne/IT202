@@ -59,9 +59,11 @@ $r = $stmt->execute();
 $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
     <h3>Edit Cart</h3>
+    <br>
     <form method="POST">
-    <label>Product:</label>
-        <select name="product_id" value="<?php echo $result["product_id"]; ?>" >
+    <div class="form-group">
+    <label for="pid">Product:</label>
+        <select class="form-control" id="pid" name="product_id" value="<?php echo $result["product_id"]; ?>" >
             <option value="-1">None</option>
             <?php foreach ($products as $product): ?>
                 <option value="<?php safer_echo($product["id"]); ?>" 
@@ -72,11 +74,12 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 </option>
             <?php endforeach; ?>
         </select>
-        <br><br>
-        <label>Quantity: </label>
-        <input type="number" min="1" name="quantity" value="<?php echo $result["quantity"]; ?>"/>
-        <br><br>
-        <input type="submit" name="save" value="Update"/>
+        </div>
+        <div class="form-group">
+            <label for="quant">Quantity: </label>
+            <input class="form-control" type="number" min="1" id="quant" name="quantity" value="<?php echo $result["quantity"]; ?>"/>
+        </div>
+        <input class="btn btn-primary" type="submit" name="save" value="Update"/>
     </form>
 
 

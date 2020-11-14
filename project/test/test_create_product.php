@@ -6,21 +6,26 @@ if (!has_role("Admin")) {
     die(header("Location: ../login.php"));
 }
 ?>
-
+<h3>Create Product</h3>
+<br>
 <form method="POST">
-	<label for="name">Name</label><br>
-	<input name="name" placeholder="Name"/>
-	<br><br>
-	<label for="quantity">Quantity</label><br>
-	<input type="number" name="quantity" placeholder="Quantity"/>
-	<br><br>
-	<label for="price">Price</label><br>
-	<input type="number" name="price" step="0.01" placeholder="Price"/>
-	<br><br>
-	<label for="description">Description</label><br>
-	<textarea name="description" rows="4" cols="50"></textarea>
-	<br><br>
-    <input type="submit" name="save" value="save" />
+	<div class="form-group">
+		<label for="name">Name:</label>
+		<input class="form-control" id="name" name="name"/>
+	</div>
+	<div class="form-group">
+		<label for="quantity">Quantity:</label>
+		<input class="form-control" type="number" id="quantity" name="quantity"/>
+	</div>
+	<div class="form-group">
+		<label for="price">Price:</label>
+		<input class="form-control" type="number" id="price" name="price" step="0.01"/>
+	</div>
+	<div class="form-group">
+		<label for="description">Description:</label>
+		<textarea class="form-control" id="description" name="description" rows="4" cols="50"></textarea>
+	</div>
+    <input class="btn btn-primary" type="submit" name="save" value="save" />
 </form>
 
 <?php

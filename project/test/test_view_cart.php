@@ -26,18 +26,17 @@ if (isset($id)) {
     }
 }
 ?>
-    <h3>View Cart</h3>
 <?php if (isset($result) && !empty($result)): ?>
     <div class="card">
-        <div class="card-title">
-            <?php safer_echo($result["name"]); ?>
-        </div>
+        
         <div class="card-body">
-            <div>
-                <p><b>Stats</b></p>
-                <div>Quanity: <?php safer_echo($result["quantity"]); ?></div>
-                <div>Price: <?php safer_echo($result["price"]); ?></div>
-                <div>Owned by: <?php safer_echo($result["username"]); ?></div>
+            <h4 class="card-title">
+                <?php safer_echo($result["name"]); ?>
+            </h4>
+            <div class="card-text">
+                <div><b>Quanity:</b> <?php safer_echo($result["quantity"]); ?></div>
+                <div><b>Price:</b> <?php safer_echo($result["price"]); ?></div>
+                <div><b>Owned by:</b> <?php safer_echo($result["username"]); ?></div>
             </div>
         </div>
     </div>

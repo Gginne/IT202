@@ -29,13 +29,14 @@ $res = $stmt->execute();
 $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <h3>List Carts</h3>
+<br>
 <form method="POST">
-<label>Product:</label>
-<input name="query" placeholder="Search" value="<?php safer_echo($query); ?>"/>
-    <input type="submit" value="Search" name="search"/>
-    <br><br>
+    <div class="form-group">
+        <input class="form-control"name="query" placeholder="Search Cart" value="<?php safer_echo($query); ?>"/>
+    </div>
+    <input class="btn btn-primary" type="submit" value="Search" name="search"/>
 </form>
-<div class="results">
+<div class="results mt-3">
     <?php if (count($results) > 0): ?>
         <div class="list-group">
             <?php foreach ($results as $r): ?>

@@ -61,19 +61,23 @@ if(isset($id)){
 ?>
 
 <form method="POST">
-	<label>Name</label><br>
-	<input name="name" value="<?php echo $result["name"];?>"/>
-	<br><br>
-	<label for="quantity">Quantity</label><br>
-	<input type="number" name="quantity" value="<?php echo $result["quantity"];?>"/>
-	<br><br>
-	<label for="price">Price</label><br>
-	<input type="number" name="price" step="0.01" value="<?php echo $result["price"];?>"/>
-	<br><br>
-	<label for="description">Description</label><br>
-	<textarea name="description" rows="4" cols="50"><?php echo $result["description"];?></textarea>
-	<br><br>
-	<input type="submit" name="save" value="Update"/>
+	<div class="form-group">
+		<label for="name">Name:</label>
+		<input class="form-control" id="name" name="name" value="<?php echo $result["name"];?>"/>
+	</div>
+	<div class="form-group">
+		<label for="quantity">Quantity:</label>
+		<input class="form-control" type="number" id="name" name="quantity" value="<?php echo $result["quantity"];?>"/>
+	</div>
+	<div class="form-group">
+		<label for="price">Price:</label>
+		<input class="form-control" type="number" id="price" name="price" step="0.01" value="<?php echo $result["price"];?>"/>
+	</div>
+	<div class="form-group">
+		<label for="description">Description:</label>
+		<textarea class="form-control" id="description" name="description" rows="4" cols="50"><?php echo $result["description"];?></textarea>
+	</div>
+	<input class="btn btn-primary" type="submit" name="save" value="Update"/>
 </form>
 
 
