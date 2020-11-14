@@ -108,23 +108,28 @@ if (isset($_POST["saved"])) {
 
 
 ?>
-<h2><?= get_username()."'" ?> Profile</h2>
+<h2><?= get_username()."'s" ?> profile</h2>
+<br>
 <form method="POST">
-    <label for="email">Email</label><br>
-    <input type="email" name="email" maxlength="100" value="<?php safer_echo(get_email()); ?>" >
-    <br><br>
-    <label for="username">Username</label><br>
-    <input type="text" maxlength="60" name="username" value="<?php safer_echo(get_username()); ?>" />
-    <br><br>
-    <!-- DO NOT PRELOAD PASSWORD-->
-    <label for="pw">Password</label><br>
-    <input type="password" name="password" minlength="6" maxlength="60" />
-    <br><br>
-    <label for="cpw">Confirm Password</label><br>
-    <input type="password" name="confirm" minlength="6" maxlength="60" />
-    <br><br>
-    <input type="submit" name="saved" value="Save Profile"/>
+  <div class="form-group">
+    <label for="email">Email:</label>
+    <input type="email" class="form-control" id="email" name="email" maxlength="100" value="<?php safer_echo(get_email()); ?>" required>
+  </div>
+  <div class="form-group">
+    <label for="user">Username:</label>
+    <input type="text" class="form-control" id="user" name="username" maxlength="60" value="<?php safer_echo(get_username()); ?>" required>
+  </div>
+  <div class="form-group">
+    <label for="p1">Password:</label>
+    <input type="password" class="form-control" id="p1" name="password" minlength="6" maxlength="60" required>
+  </div>
+  <div class="form-group">
+    <label for="p2">Confirm Password:</label>
+    <input type="password" class="form-control" id="p2" name="confirm" minlength="6" maxlength="60" required>
+  </div>
+  <input type="submit" class="btn btn-primary" name="saved" value="Save Profile"/>
 </form>
+
 
 <?php require(__DIR__ . "/partials/flash.php"); ?>
 <?php require_once(__DIR__."/partials/footer.php") ?>

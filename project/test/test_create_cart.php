@@ -14,22 +14,25 @@ $r = $stmt->execute();
 $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
     <h3>Create Cart</h3>
+    <br>
     <form method="POST">
-        <label>Product:</label>
-        <select name="product_id" value="-1" >
-            <option value="-1">None</option>
-            <?php foreach ($products as $product): ?>
-                <option value="<?php safer_echo($product["id"]); ?>">
-                    <?php safer_echo($product["name"]); ?>
-                    -- $<?php safer_echo(get_product_price($product["id"])); ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
-        <br><br>
-        <label>Quantity</label>
-        <input type="number" min="1" name="quantity"/>
-        <br><br>
-        <input type="submit" name="save" value="Create"/>
+        <div class="form-group">
+            <label for="pid">Product:</label>
+            <select class="form-control" id="pid" name="product_id" value="-1">
+                <option value="-1">None</option>
+                <?php foreach ($products as $product): ?>
+                    <option value="<?php safer_echo($product["id"]); ?>">
+                        <?php safer_echo($product["name"]); ?>
+                        -- $<?php safer_echo(get_product_price($product["id"])); ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="quant">Quantity:</label>
+            <input class="form-control" id="quant" type="number" min="1" name="quantity"/>
+        </div>
+        <input class="btn btn-primary" type="submit"  name="save" value="Create"/>
     </form>
 
 <?php

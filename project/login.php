@@ -2,18 +2,18 @@
 
 
 <h2>Login</h2>
-<br/>
-<form method="POST">
-    <label for="user">Username or Email:</label><br>
-    <input type="text" id="user" name="user" maxlength="60" required/>
-    <br><br>
-    <label for="p1">Password:</label><br>
-    <input type="password" id="p1" name="password" required/>
-    <br><br>
-    <input type="submit" name="login" value="Login"/>
-</form>
 <br>
-<div>
+<form method="POST">
+  <div class="form-group">
+    <label for="user">Username or Email</label>
+    <input type="text" class="form-control" id="user" name="user" maxlength="60" placeholder="Enter username or email" required>
+  </div>
+  <div class="form-group">
+    <label for="password">Password</label>
+    <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+  </div>
+  <input type="submit" class="btn btn-primary" name="login" value="Login"/>
+</form>
 <?php
 if (isset($_POST["login"])) {
     $user = isset($_POST["user"]) ? $_POST["user"] : null;
