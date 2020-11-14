@@ -58,22 +58,26 @@ if (!isset($username)) {
 </div>
 
 <h2>Register</h2>
-<br/>
-<form method="POST">
-    <label for="email">Email:</label><br>
-    <input type="email" id="email" name="email" maxlength="60" value="<?php safer_echo($email); ?>" required/>
-    <br><br>
-    <label for="user">Username:</label><br>
-    <input type="text" id="user" name="username" maxlength="60" value="<?php safer_echo($username); ?>" required />
-    <br><br>
-    <label for="p1">Password:</label><br>
-    <input type="password" id="p1" name="password" minlength="6" maxlength="60" required/>
-    <br><br>
-    <label for="p2">Confirm Password:</label><br>
-    <input type="password" id="p2" name="confirm" minlength="6" maxlength="60" required/>
-    <br><br>
-    <input type="submit" name="register" value="Register"/>
-</form>
 <br>
+<form method="POST">
+  <div class="form-group">
+    <label for="email">Email:</label>
+    <input type="email" class="form-control" id="email" name="email" maxlength="60" value="<?php safer_echo($email); ?>" required>
+  </div>
+  <div class="form-group">
+    <label for="user">Username:</label>
+    <input type="text" class="form-control" id="user" name="username" maxlength="60" value="<?php safer_echo($username); ?>" required>
+  </div>
+  <div class="form-group">
+    <label for="p1">Password:</label>
+    <input type="password" class="form-control" id="p1" name="password" minlength="6" maxlength="60" required>
+  </div>
+  <div class="form-group">
+    <label for="p2">Confirm Password:</label>
+    <input type="password" class="form-control" id="p2" name="confirm" minlength="6" maxlength="60" required>
+  </div>
+  <input type="submit" class="btn btn-primary" name="register" value="Register"/>
+</form>
+
 <?php require(__DIR__ . "/partials/flash.php"); ?>
 <?php require_once(__DIR__ . "/partials/footer.php"); ?>
