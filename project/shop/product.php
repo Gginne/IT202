@@ -32,7 +32,7 @@ if (isset($id)) {
         <p class="lead">$<?= $result["price"] ?></p>
         <form action="cart.php" method="post">
             <div class="input-group">
-                <input class="mx-1" name="quantity" min="1" max="<?= $result["quantity"] ?>" type="number">
+                <input class="mx-1" name="quantity" min="1" max="<?= $result["quantity"] ?>" value="1" type="number">
                 <span class="input-group-btn">
                     <input class="btn btn-primary" type="submit" value="Add to Cart" name="search"/>
                 </span>

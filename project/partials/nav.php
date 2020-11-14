@@ -5,7 +5,7 @@
   </button>
 
   <div class="collapse navbar-collapse px-3" id="navbarSupportedContent">
-    <ul class="navbar-nav mr-auto">
+    <ul class="navbar-nav ">
       <li class="nav-item">
         <a class="nav-link" href="<?php echo getURL("home.php");?>">Home <span class="sr-only">(current)</span></a>
       </li>

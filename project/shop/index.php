@@ -33,11 +33,11 @@ if (empty($query)) {
     }
 }
 ?>
-<form method="POST">
+<form method="POST" class="mx-auto mb-3" style="width: 40rem;">
     <div class="input-group">
-        <input class="form-control w-25" name="query" placeholder="Search" value="<?php safer_echo($query); ?>"/>
+        <input class="form-control mx-2" name="query" placeholder="Enter Product..." value="<?php safer_echo($query); ?>"/>
         <span class="input-group-btn">
-            <input class="btn btn-primary" type="submit" value="Search" name="search"/>
+            <input class="btn btn-primary text-white" type="submit" value="Search" name="search"/>
         </span>
     </div>     
 </form>
@@ -50,9 +50,9 @@ if (empty($query)) {
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title"><?php safer_echo($r["name"]); ?></h5>
-                        <p class="card-text"><b><?php safer_echo($r["price"]); ?></b></p>
+                        <p class="card-text lead"><b>$<?php safer_echo($r["price"]); ?></b></p>
                         <div>
-                            <a class="btn btn-success text-white" href="purchase.php?id=<?php safer_echo($r['id']); ?>&qt=1">Buy One</a>
+                            <a class="btn btn-success text-white" <?= $r["quantity"] == 0 ? "disabled" : "" ?> href="purchase.php?id=<?php safer_echo($r['id']); ?>&qt=1">Add One</a>
                             <a class="btn btn-warning text-white" href="product.php?id=<?php safer_echo($r['id']); ?>">More</a>
                         </div>
                     </div>
