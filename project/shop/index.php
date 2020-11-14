@@ -11,7 +11,7 @@ $results = [];
 if (isset($_POST["query"])) {
     $query = $_POST["query"];
 }
-if (isset($_POST["search"]) && empty($query)) {
+if (empty($query)) {
     $db = getDB();
     $stmt = $db->prepare("SELECT id,name, quantity, price, description, user_id from Products LIMIT 10");
     $r = $stmt->execute();
@@ -51,10 +51,9 @@ if (isset($_POST["search"]) && empty($query)) {
                     <div class="card-body">
                         <h5 class="card-title"><?php safer_echo($r["name"]); ?></h5>
                         <p class="card-text"><b><?php safer_echo($r["price"]); ?></b></p>
-                        <p class="card-text"><?php safer_echo($r["description"]); ?></p>
                         <div>
-                            <a class="btn btn-success text-white" href="purchase.php?id=<?php safer_echo($r['id']); ?>">Buy One</a>
-                            <a class="btn btn-warning text-white" href="item.php?id=<?php safer_echo($r['id']); ?>">View</a>
+                            <a class="btn btn-success text-white" href="purchase.php?id=<?php safer_echo($r['id']); ?>&qt=1">Buy One</a>
+                            <a class="btn btn-warning text-white" href="product.php?id=<?php safer_echo($r['id']); ?>">More</a>
                         </div>
                     </div>
                     </div>

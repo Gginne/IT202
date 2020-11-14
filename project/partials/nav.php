@@ -33,7 +33,7 @@
       <?php endif; ?>
       <?php if(is_logged_in()):?>
       <li class="nav-item">
-        <a class="nav-link" href="<?php echo getURL("shop/catalog.php");?>">Catalog</a>
+        <a class="nav-link" href="<?php echo getURL("shop/index.php");?>">Catalog</a>
       </li>
       <?php endif; ?>
       <?php if(is_logged_in()):?>
