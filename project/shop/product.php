@@ -11,7 +11,40 @@ if (!has_role("Admin")) {
 if (isset($_GET["id"])) {
     $id = $_GET["id"];
 }
+
+if(isset($_POST["add"])){
+    $qt = $_POST["quantity"]
+}
 ?>
+<script>
+        
+    let id = <?php echo $id;?>;
+    let qt = <?php echo $qt;?>;
+
+    function addToCart() {
+        //https://www.w3schools.com/xml/ajax_xmlhttprequest_send.asp
+        let xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                let json = JSON.parse(this.responseText);
+                if (json) {
+                    if (json.status == 200) {
+                        alert("Successfully added " + json.product.name + " to cart");
+                        location.reload();
+                    } else {
+                        alert(json.error);
+                    }
+                }
+            }
+        };
+        xhttp.open("POST", `<?php echo getURL("api/addCart.php");?>?id=${id}&qt=${qt}`, true);
+        //this is required for post ajax calls to submit it as a form
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        //map any key/value data similar to query params
+        xhttp.send();
+
+    }
+</script>
 <?php
 //fetching
 $result = [];
@@ -30,11 +63,11 @@ if (isset($id)) {
     <div class="jumbotron bg-white border border-secondary">
         <h1 class="display-4"><?= $result["name"] ?></h1>
         <p class="lead">$<?= $result["price"] ?></p>
-        <form action="cart.php" method="post">
+        <form method="post">
             <div class="input-group">
                 <input class="mx-1" name="quantity" min="1" max="<?= $result["quantity"] ?>" value="1" type="number">
                 <span class="input-group-btn">
-                    <input class="btn btn-primary" type="submit" value="Add to Cart" name="search"/>
+                    <input class="btn btn-primary" onClick="addToCart()" type="submit" value="Add to Cart" name="add"/>
                 </span>
             </div>     
         </form>
