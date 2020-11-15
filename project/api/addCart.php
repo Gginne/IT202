@@ -16,15 +16,47 @@ if (isset($_GET["test"])) {
 //$eggs_owned = 0;
 //$base_cost = 10;
 //$cost = $eggs_owned * $base_cost;
-if (isset($_GET["id"])) {
-    $id = $_GET["id"];
+$id = null;
+$qt = null;
+if (isset($_POST["id"])) {
+    $id = $_POST["id"];
 }
 
-if(isset($_POST["add"])){
-    $qt = $_POST["quantity"]
+if(isset($_POST["qt"])){
+    $qt = $_POST["qt"];
 }
 
+$price = get_product_price($id);
 $user = get_user_id();
+$name = get_product_name($id);
+
+$cart = [
+    "name" => $name,
+    "product_id" => $id,
+    "quantity" => $qt,
+    "price" => $price,
+    "user_id" => $user
+];
+
+$db = getDB();
+$stmt = $db->prepare("INSERT INTO Carts (product_id, quantity, price, user_id) VALUES(:product, :quantity, :price, :user)");
+$r = $stmt->execute([
+    ":product" => $cart["product_id"],
+    ":quantity" => $cart["quantity"],
+    ":price" => $cart["price"],
+    ":user" => $cart["user_id"]
+]);
+if ($r) {
+    $response = ["status" => 200, "cart" => $cart];
+    echo json_encode($response);
+    die();
+}
+else {
+    $e = $stmt->errorInfo();
+    $response = ["status" => 400, "error" => $e];
+    echo json_encode($response);
+    die();
+}
 
 
 ?>

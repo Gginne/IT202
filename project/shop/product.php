@@ -37,6 +37,7 @@ if (isset($id)) {
                 <input class="mx-1" id="quantity" min="1" max="<?= $result["quantity"] ?>" value="1" type="number">
                 <span class="input-group-btn">
                     <button class="btn btn-primary" onClick="addToCart()">Add to Cart</button>
+                    <button class="btn btn-danger" onClick="makePurchase()">Buy</button>
                 </span>
             </div>     
         <hr class="my-4">
@@ -50,7 +51,7 @@ if (isset($id)) {
         
     
     function addToCart() {
-        let id = <?php echo $id;?>;
+        let id = <?= $id;?>;
         let qt = Number(document.getElementById("quantity").value)
         //https://www.w3schools.com/xml/ajax_xmlhttprequest_send.asp
         let xhttp = new XMLHttpRequest();
@@ -59,7 +60,7 @@ if (isset($id)) {
                 let json = JSON.parse(this.responseText);
                 if (json) {
                     if (json.status == 200) {
-                        alert("Successfully added " + json.product.name + " to cart");
+                        alert("Successfully added " + json.cart.quantity + " " + json.cart.name + " to cart");
                         location.reload();
                     } else {
                         alert(json.error);
@@ -67,11 +68,11 @@ if (isset($id)) {
                 }
             }
         };
-        xhttp.open("POST", `<?php echo getURL("api/addCart.php");?>?id=${id}&qt=${qt}`, true);
+        xhttp.open("POST", "<?php echo getURL("api/addCart.php");?>", true);
         //this is required for post ajax calls to submit it as a form
         xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         //map any key/value data similar to query params
-        xhttp.send();
+        xhttp.send(`id=${id}&qt=${qt}`);
 
     }
 </script>

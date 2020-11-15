@@ -76,6 +76,14 @@ function get_product_price($id){
     return $product["price"];
 }
 
+function get_product_name($id){
+    $db = getDB();
+    $stmt = $db->prepare("SELECT name FROM Products WHERE id = :id");
+    $r = $stmt->execute([":id" => $id]);
+    $product = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $product["name"];
+}
+
 function getURL($path) {
     if (substr($path, 0, 1) == "/") {
         return $path;
