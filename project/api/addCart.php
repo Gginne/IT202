@@ -39,13 +39,28 @@ $cart = [
 ];
 
 $db = getDB();
-$stmt = $db->prepare("INSERT INTO Carts (product_id, quantity, price, user_id) VALUES(:product, :quantity, :price, :user)");
-$r = $stmt->execute([
-    ":product" => $cart["product_id"],
-    ":quantity" => $cart["quantity"],
-    ":price" => $cart["price"],
-    ":user" => $cart["user_id"]
-]);
+$r = null;
+if(!in_cart($id)) {
+    $stmt = $db->prepare("INSERT INTO Carts (product_id, quantity, price, user_id) VALUES(:product, :quantity, :price, :user)");
+    $r = $stmt->execute([
+        ":product" => $cart["product_id"],
+        ":quantity" => $cart["quantity"],
+        ":price" => $cart["price"],
+        ":user" => $cart["user_id"],
+    ]);
+   
+}
+
+if(in_cart($id)){
+    $stmt = $db->prepare("UPDATE Carts set quantity=:quantity WHERE product_id=:product AND user_id=:user");
+    $r = $stmt->execute([
+        ":quantity" => $cart["quantity"],
+        ":product" => $cart["product_id"],
+        ":user" => $cart["user_id"]
+    ]);
+    
+} 
+
 if ($r) {
     $response = ["status" => 200, "cart" => $cart];
     echo json_encode($response);
@@ -57,6 +72,8 @@ else {
     echo json_encode($response);
     die();
 }
+
+
 
 
 ?>
