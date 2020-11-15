@@ -1,10 +1,5 @@
 <?php require_once(__DIR__ . "/../partials/header.php"); ?>
 <?php
-if (!is_logged_in()) {
-    //this will redirect to login and kill the rest of this script (prevent it from executing)
-    flash("You must be logged in to access this page");
-    die(header("Location: login.php"));
-}
 //$balance = getBalance();
 $query = "";
 $results = [];
@@ -52,8 +47,10 @@ if (empty($query)) {
                         <h5 class="card-title"><?php safer_echo($r["name"]); ?></h5>
                         <p class="card-text lead"><b>$<?php safer_echo($r["price"]); ?></b></p>
                         <div>
-                            <a class="btn btn-success text-white" <?= $r["quantity"] == 0 ? "disabled" : "" ?> href="purchase.php?id=<?php safer_echo($r['id']); ?>&qt=1">Add One</a>
-                            <a class="btn btn-warning text-white" href="product.php?id=<?php safer_echo($r['id']); ?>">More</a>
+                            <?php if(is_logged_in()): ?>
+                                <button class="btn btn-white border border-dark" onClick="addToCart(<?php safer_echo($r['id']); ?>)">Add One</button>
+                            <?php endif; ?>
+                            <a class="btn btn-white border border-dark" href="product.php?id=<?php safer_echo($r['id']); ?>">More</a>
                         </div>
                     </div>
                     </div>
@@ -64,5 +61,32 @@ if (empty($query)) {
         <p>No results</p>
     <?php endif; ?>
 </div>
+<script>
+        
+    
+    function addToCart(id) {
+        //https://www.w3schools.com/xml/ajax_xmlhttprequest_send.asp
+        let xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                let json = JSON.parse(this.responseText);
+                if (json) {
+                    if (json.status == 200) {
+                        alert("Successfully added " + json.cart.quantity + " " + json.cart.name + " to cart");
+                        location.reload();
+                    } else {
+                        alert(json.error);
+                    }
+                }
+            }
+        };
+        xhttp.open("POST", "<?php echo getURL("api/addCart.php");?>", true);
+        //this is required for post ajax calls to submit it as a form
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        //map any key/value data similar to query params
+        xhttp.send(`id=${id}&qt=1`);
+
+    }
+</script>
 <?php require(__DIR__ . "/../partials/flash.php"); ?>
 <?php require_once(__DIR__ . "/../partials/footer.php"); ?>

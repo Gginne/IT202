@@ -84,6 +84,16 @@ function get_product_name($id){
     return $product["name"];
 }
 
+function in_cart($prod_id){
+    $db = getDB();
+    $stmt = $db->prepare("SELECT id FROM Carts WHERE product_id = :prod_id");
+    $r = $stmt->execute([":prod_id" => $prod_id]);
+    if($r){
+        return true;
+    }
+    return false;
+}
+
 function getURL($path) {
     if (substr($path, 0, 1) == "/") {
         return $path;
