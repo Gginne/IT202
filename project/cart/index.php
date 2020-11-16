@@ -18,28 +18,28 @@ $carts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <h3><?= get_username() ?>'s Cart</h3>
 <div class="results mt-3">
     <?php if (count($carts) > 0): ?>
-        <ul class="list-group list-group-flush">
+    <table class="table">
+        <thead>
+            <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Unit Price</th>
+            <th scope="col">Total</th>
+            <th scope="col">Edit</th>
+            </tr>
+        </thead>
+        <tbody>
             <?php foreach ($carts as $cart): ?>
-                <li class="list-group-item">
-                    <div>
-                        <span>Product:</span>
-                        <div><?php safer_echo(get_product_name($cart["product_id"])); ?></div>
-                    </div>
-                    <div>
-                        <span>Quantity:</span>
-                        <div><?php safer_echo($cart["quantity"]); ?></div>
-                    </div>
-                    <div>
-                        <span>Price:</span>
-                        <div><?php echo get_product_price($cart["product_id"]); ?></div>
-                    </div>
-            
-                    <div>
-                        <a type="button" href="product.php?id=<?php safer_echo($r['id']); ?>">Edit</a>
-                    </div>
-                </li>
+            <tr>
+                <th scope="row"><?php safer_echo(get_product_name($cart["product_id"])); ?></th>
+                <td><?php safer_echo($cart["quantity"]); ?></td>
+                <td>$<?php safer_echo(get_product_price($cart["product_id"])); ?></td>
+                <td>$<?php safer_echo(get_product_price($cart["product_id"])*$cart["quantity"]); ?></td>
+                <td><a type="button" href="../shop/product.php?id=<?php safer_echo($cart["product_id"]); ?>">Edit</a></td>
+            </tr>
             <?php endforeach; ?>
-        </div>
+            <tbody>
+    </table>
     <?php else: ?>
         <p>No results</p>
     <?php endif; ?>
