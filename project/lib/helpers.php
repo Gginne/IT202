@@ -86,15 +86,16 @@ function get_product_name($id){
 
 function in_cart($prod_id){
     $db = getDB();
-    $stmt = $db->prepare("SELECT id FROM Carts WHERE product_id = :prod_id and user_id = :user");
+    $stmt = $db->prepare("SELECT quantity FROM Carts WHERE product_id = :prod_id and user_id = :user");
     $r = $stmt->execute([
         ":prod_id" => $prod_id,
         ":user" => get_user_id()
     ]);
     if($stmt->rowCount() > 0){
-        return true;
+        $cart = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $cart["quantity"];
     }
-    return false;
+    return 0;
 }
 
 function getURL($path) {

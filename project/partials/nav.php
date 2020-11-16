@@ -12,6 +12,7 @@
       <li class="nav-item">
         <a class="nav-link" href="<?php echo getURL("shop/index.php");?>">Catalog</a>
       </li>
+     
     
       <?php if (has_role("Admin")): ?>
       <li class="nav-item dropdown">
@@ -36,6 +37,9 @@
       </li>
       <?php endif; ?>
       <?php if(is_logged_in()):?>
+      <li class="nav-item">
+        <a class="nav-link" href="<?php echo getURL("cart/index.php");?>">My Cart</a>
+      </li>
       <li class="nav-item">
         <a class="nav-link" href="<?php echo getURL("profile.php");?>">Profile</a>
       </li>
