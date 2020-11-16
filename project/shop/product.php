@@ -27,7 +27,7 @@ if (isset($id)) {
         <p class="lead">$<?= $result["price"] ?></p>
             <?php if(is_logged_in()): ?>
             <div class="input-group">
-                <input class="mx-1" id="quantity" min="1" max="<?= $result["quantity"] ?>" value="1" type="number">
+                <input class="mx-1" id="quantity" min="0" max="<?= $result["quantity"] ?>" value="<?= in_cart($result["id"]) ?>" type="number">
                 
                 <span class="input-group-btn">
                     <button class="btn btn-primary" onClick="addToCart()">Add to Cart</button>
