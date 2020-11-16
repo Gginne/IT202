@@ -9,14 +9,11 @@
       <li class="nav-item">
         <a class="nav-link" href="<?php echo getURL("home.php");?>">Home <span class="sr-only">(current)</span></a>
       </li>
-      <?php if(!is_logged_in()):?>
       <li class="nav-item">
-        <a class="nav-link" href="<?php echo getURL("login.php");?>">Login</a>
+        <a class="nav-link" href="<?php echo getURL("shop/index.php");?>">Catalog</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="<?php echo getURL("register.php");?>">Register</a>
-      </li>
-      <?php endif; ?>
+     
+    
       <?php if (has_role("Admin")): ?>
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -31,12 +28,18 @@
         </div>
       </li>
       <?php endif; ?>
-      <?php if(is_logged_in()):?>
+      <?php if(!is_logged_in()):?>
       <li class="nav-item">
-        <a class="nav-link" href="<?php echo getURL("shop/index.php");?>">Catalog</a>
+        <a class="nav-link" href="<?php echo getURL("login.php");?>">Login</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="<?php echo getURL("register.php");?>">Register</a>
       </li>
       <?php endif; ?>
       <?php if(is_logged_in()):?>
+      <li class="nav-item">
+        <a class="nav-link" href="<?php echo getURL("cart/index.php");?>">My Cart</a>
+      </li>
       <li class="nav-item">
         <a class="nav-link" href="<?php echo getURL("profile.php");?>">Profile</a>
       </li>

@@ -76,6 +76,28 @@ function get_product_price($id){
     return $product["price"];
 }
 
+function get_product_name($id){
+    $db = getDB();
+    $stmt = $db->prepare("SELECT name FROM Products WHERE id = :id");
+    $r = $stmt->execute([":id" => $id]);
+    $product = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $product["name"];
+}
+
+function in_cart($prod_id){
+    $db = getDB();
+    $stmt = $db->prepare("SELECT quantity FROM Carts WHERE product_id = :prod_id and user_id = :user");
+    $r = $stmt->execute([
+        ":prod_id" => $prod_id,
+        ":user" => get_user_id()
+    ]);
+    if($stmt->rowCount() > 0){
+        $cart = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $cart["quantity"];
+    }
+    return 0;
+}
+
 function getURL($path) {
     if (substr($path, 0, 1) == "/") {
         return $path;
