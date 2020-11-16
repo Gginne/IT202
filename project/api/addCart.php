@@ -40,7 +40,7 @@ $cart = [
 
 $db = getDB();
 $r = null;
-if(in_cart($id) == 0) {
+if(in_cart($id) == 0 && $qt > 0) {
     $stmt = $db->prepare("INSERT INTO Carts (product_id, quantity, price, user_id) VALUES(:product, :quantity, :price, :user)");
     $r = $stmt->execute([
         ":product" => $cart["product_id"],
@@ -50,13 +50,21 @@ if(in_cart($id) == 0) {
     ]);
    
 } else {
-    $stmt = $db->prepare("UPDATE Carts set quantity=:quantity WHERE product_id=:product AND user_id=:user");
-    $r = $stmt->execute([
-        ":quantity" => $cart["quantity"],
-        ":product" => $cart["product_id"],
-        ":user" => $cart["user_id"]
-    ]);
-    
+    if($qt > 0){
+        $stmt = $db->prepare("UPDATE Carts set quantity=:quantity WHERE product_id=:product AND user_id=:user");
+        $r = $stmt->execute([
+            ":quantity" => $cart["quantity"],
+            ":product" => $cart["product_id"],
+            ":user" => $cart["user_id"]
+        ]);  
+    } else {
+        $stmt = $db->prepare("DELETE FROM Carts WHERE product_id=:product AND user_id=:user");
+        $r = $stmt->execute([
+            ":product" => $cart["product_id"],
+            ":user" => $cart["user_id"]
+        ]);  
+    }
+   
 } 
 
 if ($r) {
