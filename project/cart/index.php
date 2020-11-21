@@ -26,6 +26,7 @@ $carts = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <th scope="col">Unit Price</th>
             <th scope="col">Total</th>
             <th scope="col">Edit</th>
+            <th scope="col">Delete</th>
             </tr>
         </thead>
         <tbody>
@@ -35,14 +36,46 @@ $carts = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <td><?php safer_echo($cart["quantity"]); ?></td>
                 <td>$<?php safer_echo(get_product_price($cart["product_id"])); ?></td>
                 <td>$<?php safer_echo(get_product_price($cart["product_id"])*$cart["quantity"]); ?></td>
-                <td><a type="button" href="../shop/product.php?id=<?php safer_echo($cart["product_id"]); ?>">Edit</a></td>
+                <td><a href="../shop/product.php?id=<?php safer_echo($cart["product_id"]); ?>">Edit</a></td>
+                <td><a class="text-danger" onClick="deleteCart(<?= safer_echo($cart["product_id"]);?>)">Delete</a></td>
             </tr>
             <?php endforeach; ?>
             <tbody>
     </table>
     <?php else: ?>
-        <p>No results</p>
+        <p>Empty cart, <a href="../shop/">let's change that</a></p>
     <?php endif; ?>
 </div>
+
+<script>
+
+    function makePurchase(){
+        alert("TBD")
+    }  
+    
+    function deleteCart(id) {
+        //https://www.w3schools.com/xml/ajax_xmlhttprequest_send.asp
+        let xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                let json = JSON.parse(this.responseText);
+                if (json) {
+                    if (json.status == 200) {
+                        alert("Successfully removed " + json.cart.name + " from cart");
+                        location.reload();
+                    } else {
+                        alert(json.error);
+                    }
+                }
+            }
+        };
+        xhttp.open("POST", "<?php echo getURL("api/addCart.php");?>", true);
+        //this is required for post ajax calls to submit it as a form
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        //map any key/value data similar to query params
+        xhttp.send(`id=${id}&qt=0`);
+
+    }
+</script>
 
 <?php require_once(__DIR__ . "/../partials/footer.php"); ?>

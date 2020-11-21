@@ -30,7 +30,7 @@ if (isset($id)) {
                 <input class="mx-1" id="quantity" min="0" max="<?= $result["quantity"] ?>" value="<?= in_cart($result["id"]) ?>" type="number">
                 
                 <span class="input-group-btn">
-                    <button class="btn btn-primary" onClick="addToCart()">Add to Cart</button>
+                    <button class="btn btn-primary" onClick="addToCart(<?= $id;?>)">Add to Cart</button>
                     <button class="btn btn-danger" onClick="makePurchase()">Buy</button>
                 </span>  
             </div>
@@ -48,13 +48,13 @@ if (isset($id)) {
         alert("TBD")
     }  
     
-    function addToCart() {
-        let id = <?= $id;?>;
+    function addToCart(id) {
         let qt = Number(document.getElementById("quantity").value)
         //https://www.w3schools.com/xml/ajax_xmlhttprequest_send.asp
         let xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
+                console.log(this.responseText)
                 let json = JSON.parse(this.responseText);
                 if (json) {
                     if (json.status == 200) {
