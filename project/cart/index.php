@@ -37,7 +37,7 @@ $carts = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <td>$<?php safer_echo(get_product_price($cart["product_id"])); ?></td>
                 <td>$<?php safer_echo(get_product_price($cart["product_id"])*$cart["quantity"]); ?></td>
                 <td><a href="../shop/product.php?id=<?php safer_echo($cart["product_id"]); ?>">Edit</a></td>
-                <td><a class="text-danger" onClick="addToCart(<?= safer_echo($cart["product_id"]);?>,0)">Delete</a></td>
+                <td><a class="text-danger" onClick="deleteCart(<?= safer_echo($cart["product_id"]);?>)">Delete</a></td>
             </tr>
             <?php endforeach; ?>
             <tbody>
@@ -53,7 +53,7 @@ $carts = $stmt->fetchAll(PDO::FETCH_ASSOC);
         alert("TBD")
     }  
     
-    function addToCart(id, qt) {
+    function deleteCart(id) {
         //https://www.w3schools.com/xml/ajax_xmlhttprequest_send.asp
         let xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function () {
@@ -61,7 +61,7 @@ $carts = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 let json = JSON.parse(this.responseText);
                 if (json) {
                     if (json.status == 200) {
-                        alert("Successfully added " + json.cart.quantity + " " + json.cart.name + " to cart");
+                        alert("Successfully removed " + json.cart.name + " from cart");
                         location.reload();
                     } else {
                         alert(json.error);
@@ -73,7 +73,7 @@ $carts = $stmt->fetchAll(PDO::FETCH_ASSOC);
         //this is required for post ajax calls to submit it as a form
         xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         //map any key/value data similar to query params
-        xhttp.send(`id=${id}&qt=${Number(qt)}`);
+        xhttp.send(`id=${id}&qt=0`);
 
     }
 </script>
