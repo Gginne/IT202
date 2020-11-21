@@ -1,0 +1,2 @@
+ALTER TABLE Products
+    ADD COLUMN visibility BIT DEFAULT 1;

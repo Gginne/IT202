@@ -48,7 +48,7 @@ if (empty($query)) {
                         <p class="card-text lead"><b>$<?php safer_echo($r["price"]); ?></b> <small class="float-right text-muted"><?= in_cart($r['id']) ?> in cart</small></p>
                         <div>
                             <?php if(is_logged_in()): ?>
-                                <button class="btn btn-white border border-dark" onClick="addToCart(<?php safer_echo($r['id']); ?>)">Add One</button>
+                                <button class="btn btn-white border border-dark" onClick="addOneToCart(<?php safer_echo($r['id']); ?>)">Add One</button>
                             <?php endif; ?>
                             <a class="btn btn-white border border-dark" href="product.php?id=<?php safer_echo($r['id']); ?>">More</a>
                         </div>
@@ -64,7 +64,7 @@ if (empty($query)) {
 <script>
         
     
-    function addToCart(id) {
+    function addOneToCart(id) {
         //https://www.w3schools.com/xml/ajax_xmlhttprequest_send.asp
         let xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function () {
