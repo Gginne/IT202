@@ -84,6 +84,14 @@ function get_product_name($id){
     return $product["name"];
 }
 
+function get_product_stock($id){
+    $db = getDB();
+    $stmt = $db->prepare("SELECT quantity FROM Products WHERE id = :id");
+    $r = $stmt->execute([":id" => $id]);
+    $product = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $product["quantity"];
+}
+
 function in_cart($prod_id){
     $db = getDB();
     $stmt = $db->prepare("SELECT quantity FROM Carts WHERE product_id = :prod_id and user_id = :user");
