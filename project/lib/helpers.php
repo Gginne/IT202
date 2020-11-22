@@ -106,6 +106,18 @@ function in_cart($prod_id){
     return 0;
 }
 
+function is_visible($prod_id){
+    $db = getDB();
+    $stmt = $db->prepare("SELECT visibility FROM Products WHERE id = :prod_id");
+    $r = $stmt->execute([":prod_id" => $prod_id]);
+    $prod = $stmt->fetch(PDO::FETCH_ASSOC);
+    if($prod["visibility"] == 1 || has_role("Admin")){
+        return True;
+    }
+
+    return False;
+}
+
 function getURL($path) {
     if (substr($path, 0, 1) == "/") {
         return $path;

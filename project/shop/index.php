@@ -41,20 +41,22 @@ if (empty($query)) {
     <?php if (count($results) > 0): ?>
         <div class="row">
             <?php foreach ($results as $r): ?>
-                <div class="col-sm-3">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title"><?php safer_echo($r["name"]); ?></h5>
-                        <p class="card-text lead"><b>$<?php safer_echo($r["price"]); ?></b> <small class="float-right text-muted"><?= in_cart($r['id']) ?> in cart</small></p>
-                        <div>
-                            <?php if(is_logged_in()): ?>
-                                <button class="btn btn-white border border-dark" onClick="addToCart(<?php safer_echo($r['id']); ?>)">Add One</button>
-                            <?php endif; ?>
-                            <a class="btn btn-white border border-dark" href="product.php?id=<?php safer_echo($r['id']); ?>">More</a>
+                <?php if(is_visible($r["id"])): ?>
+                    <div class="col-sm-3">
+                    <div class="card my-1">
+                        <div class="card-body">
+                            <h5 class="card-title"><?php safer_echo($r["name"]); ?></h5>
+                            <p class="card-text lead"><b>$<?php safer_echo($r["price"]); ?></b> <small class="float-right text-muted"><?= in_cart($r['id']) ?> in cart</small></p>
+                            <div>
+                                <?php if(is_logged_in()): ?>
+                                    <button class="btn btn-white border border-dark" onClick="addOneToCart(<?php safer_echo($r['id']); ?>)">Add One</button>
+                                <?php endif; ?>
+                                <a class="btn btn-white border border-dark" href="product.php?id=<?php safer_echo($r['id']); ?>">More</a>
+                            </div>
+                        </div>
                         </div>
                     </div>
-                    </div>
-                </div>
+                <?php endif; ?>
             <?php endforeach; ?>
         </div>
     <?php else: ?>
@@ -64,7 +66,7 @@ if (empty($query)) {
 <script>
         
     
-    function addToCart(id) {
+    function addOneToCart(id) {
         //https://www.w3schools.com/xml/ajax_xmlhttprequest_send.asp
         let xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function () {
