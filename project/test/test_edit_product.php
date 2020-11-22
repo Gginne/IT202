@@ -22,16 +22,18 @@ if(isset($_POST["save"])){
 	$quantity = $_POST["quantity"];
 	$price = $_POST["price"];
 	$desc = $_POST["description"];
+	$vis = $_POST["visibility"];
 	$user = get_user_id();
 	$db = getDB();
 	if(isset($id)){
-		$stmt = $db->prepare("UPDATE Products set name=:name, quantity=:quantity, price=:price, description=:desc where id=:id");
+		$stmt = $db->prepare("UPDATE Products set name=:name, quantity=:quantity, price=:price, description=:desc, visibility=:visibility where id=:id");
 		//$stmt = $db->prepare("INSERT INTO F20_Eggs (name, state, base_rate, mod_min, mod_max, next_stage_time, user_id) VALUES(:name, :state, :br, :min,:max,:nst,:user)");
 		$r = $stmt->execute([
 			":name"=>$name,
 			":quantity"=>$quantity,
 			":price"=>$price,
 			":desc"=>$desc,
+			":visibility"=>$vis,
 			":id"=>$id
 		]);
 		if($r){
@@ -76,6 +78,20 @@ if(isset($id)){
 	<div class="form-group">
 		<label for="description">Description:</label>
 		<textarea class="form-control" id="description" name="description" rows="4" cols="50"><?php echo $result["description"];?></textarea>
+	</div>
+	<div class="form-group">
+		<div class="form-check">
+			<input class="form-check-input" type="radio" name="visibility" id="visibility" value="1" <?php echo $result["visibility"] == 1 ? "checked": "";?>>
+			<label class="form-check-label" for="visibility">
+				Visible
+			</label>
+		</div>
+		<div class="form-check">
+			<input class="form-check-input" type="radio" name="visibility" id="visibility" value="0" <?php echo $result["visibility"] == 0 ? "checked": "";?>>
+			<label class="form-check-label" for="visibility">
+				Not Visible
+			</label>
+		</div>
 	</div>
 	<input class="btn btn-primary" type="submit" name="save" value="Update"/>
 </form>

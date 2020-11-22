@@ -1,2 +1,2 @@
 ALTER TABLE Products
-    ADD COLUMN visibility BIT DEFAULT 1;
+    ADD COLUMN visibility TINYINT DEFAULT 1;
