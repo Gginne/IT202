@@ -43,7 +43,7 @@ if (empty($query)) {
             <?php foreach ($results as $r): ?>
                 <?php if(is_visible($r["id"])): ?>
                     <div class="col-sm-3">
-                    <div class="card my-1">
+                    <div class="card my-3">
                         <div class="card-body">
                             <h5 class="card-title"><?php safer_echo($r["name"]); ?></h5>
                             <p class="card-text lead"><b>$<?php safer_echo($r["price"]); ?></b> <small class="float-right text-muted"><?= in_cart($r['id']) ?> in cart</small></p>
