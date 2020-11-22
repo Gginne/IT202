@@ -5,6 +5,12 @@
 if (isset($_GET["id"])) {
     $id = $_GET["id"];
 }
+
+if (!is_visible($_GET["id"])){
+    //this will redirect to login and kill the rest of this script (prevent it from executing)
+    flash("You don't have permission to see this product");
+    die(header("Location: index.php"));
+}
 ?>
 
 <?php
