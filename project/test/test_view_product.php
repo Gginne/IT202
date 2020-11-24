@@ -17,7 +17,7 @@ if (isset($_GET["id"])) {
 $result = [];
 if (isset($id)) {
     $db = getDB();
-    $stmt = $db->prepare("SELECT Products.id,name,quantity,price,description, user_id, Users.username FROM Products as Products JOIN Users on Products.user_id = Users.id where Products.id = :id");
+    $stmt = $db->prepare("SELECT Products.id,name,quantity,price,description, user_id, visibility, Users.username FROM Products as Products JOIN Users on Products.user_id = Users.id where Products.id = :id");
     $r = $stmt->execute([":id" => $id]);
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
     if (!$result) {
@@ -33,11 +33,14 @@ if (isset($id)) {
             <h4 class="card-title">
                 <?php safer_echo($result["name"]); ?>
             </h4>
+            <small class="text-muted"><?php echo $result["visibility"] == 1 ? "visible" : "not visible";  ?> </small>
+            <br>
             <div class="card-text">
                 <div><b>Quantity:</b> <?php safer_echo($result["quantity"]); ?></div>
                 <div><b>Price:</b> <?php safer_echo($result["price"]); ?> </div>
                 <div><b>Description:</b> <?php safer_echo($result["description"]); ?></div>
                 <div><b>Employee in Charge:</b> <?php safer_echo($result["username"]); ?></div>
+               
             </div>
         </div>
     </div>

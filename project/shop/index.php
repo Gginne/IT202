@@ -41,7 +41,7 @@ if (empty($query)) {
     <?php if (count($results) > 0): ?>
         <div class="row">
             <?php foreach ($results as $r): ?>
-                <?php if(is_visible($r["id"])): ?>
+                <?php if(is_visible($r["id"]) && $r): ?>
                     <div class="col-sm-3">
                     <div class="card my-3">
                         <div class="card-body">
@@ -49,7 +49,8 @@ if (empty($query)) {
                             <p class="card-text lead"><b>$<?php safer_echo($r["price"]); ?></b> <small class="float-right text-muted"><?= in_cart($r['id']) ?> in cart</small></p>
                             <div>
                                 <?php if(is_logged_in()): ?>
-                                    <button class="btn btn-white border border-dark" onClick="addOneToCart(<?php safer_echo($r['id']); ?>)">Add One</button>
+                                    <button class="btn btn-white border border-dark" onClick="addOneToCart(<?php safer_echo($r['id']); ?>, <?= in_cart($r['id'])+1; ?>)"
+                                    <?= in_cart($r['id']) >= $r['quantity'] ? "disabled" : ""; ?>>Add One</button>
                                 <?php endif; ?>
                                 <a class="btn btn-white border border-dark" href="product.php?id=<?php safer_echo($r['id']); ?>">More</a>
                             </div>
@@ -66,7 +67,7 @@ if (empty($query)) {
 <script>
         
     
-    function addOneToCart(id) {
+    function addOneToCart(id, qt) {
         //https://www.w3schools.com/xml/ajax_xmlhttprequest_send.asp
         let xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function () {
@@ -86,7 +87,7 @@ if (empty($query)) {
         //this is required for post ajax calls to submit it as a form
         xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         //map any key/value data similar to query params
-        xhttp.send(`id=${id}&qt=1`);
+        xhttp.send(`id=${id}&qt=${qt}`);
 
     }
 </script>

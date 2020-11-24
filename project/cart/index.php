@@ -33,7 +33,7 @@ $carts = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <tr>
                 <th scope="row"><?php safer_echo(get_product_name($cart["product_id"])); ?></th>
                 <td>
-                <input class="mx-1 w-25" id="quantity" min="1" max="<?php safer_echo(get_product_stock($cart["product_id"])); ?>" value="<?php safer_echo($cart["quantity"]); ?>" type="number"> 
+                <input class="mx-1 w-25" id="quantity" min="1" max="<?php safer_echo(in_stock($cart["product_id"])); ?>" value="<?php safer_echo($cart["quantity"]); ?>" type="number"> 
                 <a href="#" onClick="editCart(<?= safer_echo($cart["product_id"]);?>)">Edit</a>
                 </td>
                 <td>$<?php safer_echo(get_product_price($cart["product_id"])); ?></td>
