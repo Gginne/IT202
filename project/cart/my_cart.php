@@ -33,7 +33,7 @@ $carts = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <tr>
                 <th scope="row"><?php safer_echo(get_product_name($cart["product_id"])); ?></th>
                 <td>
-                <input class="mx-1 w-25" id="quantity" min="1" max="<?php safer_echo(in_stock($cart["product_id"])); ?>" value="<?php safer_echo($cart["quantity"]); ?>" type="number"> 
+                <input class="mx-1 w-25" id="quantity-<?php safer_echo($cart["product_id"]); ?>" min="1" max="<?= in_stock($cart["product_id"]); ?>" value="<?php safer_echo($cart["quantity"]); ?>" type="number"> 
                 <a href="#" onClick="editCart(<?= safer_echo($cart["product_id"]);?>)">Edit</a>
                 </td>
                 <td>$<?php safer_echo(get_product_price($cart["product_id"])); ?></td>
@@ -56,7 +56,7 @@ $carts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     function editCart(id) {
         //https://www.w3schools.com/xml/ajax_xmlhttprequest_send.asp
-        let qt = Number(document.getElementById("quantity").value)
+        let qt = Number(document.getElementById(`quantity-${id}`).value)
         let xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
