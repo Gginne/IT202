@@ -84,7 +84,7 @@ function get_product_name($id){
     return $product["name"];
 }
 
-function get_product_stock($id){
+function in_stock($id){
     $db = getDB();
     $stmt = $db->prepare("SELECT quantity FROM Products WHERE id = :id");
     $r = $stmt->execute([":id" => $id]);
@@ -108,10 +108,10 @@ function in_cart($prod_id){
 
 function is_visible($prod_id){
     $db = getDB();
-    $stmt = $db->prepare("SELECT visibility FROM Products WHERE id = :prod_id");
+    $stmt = $db->prepare("SELECT visibility, quantity FROM Products WHERE id = :prod_id");
     $r = $stmt->execute([":prod_id" => $prod_id]);
     $prod = $stmt->fetch(PDO::FETCH_ASSOC);
-    if($prod["visibility"] == 1 || has_role("Admin")){
+    if(($prod["visibility"] == 1 || has_role("Admin")) && $prod["quantity"] > 0){
         return True;
     }
 

@@ -33,8 +33,8 @@ if (!has_role("Admin")) {
 			</label>
 		</div>
 		<div class="form-check">
-			<input class="form-check-input" type="radio" name="visibility" id="visibility" value="0">
-			<label class="form-check-label" for="visibility">
+			<input class="form-check-input" type="radio" name="visibility" id="invisibility" value="0">
+			<label class="form-check-label" for="invisibility">
 				Not Visible
 			</label>
 		</div>

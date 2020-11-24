@@ -10,7 +10,7 @@
         <a class="nav-link" href="<?php echo getURL("home.php");?>">Home <span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="<?php echo getURL("shop/index.php");?>">Catalog</a>
+        <a class="nav-link" href="<?php echo getURL("shop/catalog.php");?>">Catalog</a>
       </li>
      
     
@@ -38,7 +38,7 @@
       <?php endif; ?>
       <?php if(is_logged_in()):?>
       <li class="nav-item">
-        <a class="nav-link" href="<?php echo getURL("cart/index.php");?>">My Cart</a>
+        <a class="nav-link" href="<?php echo getURL("cart/my_cart.php");?>">My Cart</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="<?php echo getURL("profile.php");?>">Profile</a>
