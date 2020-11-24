@@ -1,0 +1,2 @@
+ALTER TABLE Products
+    ADD COLUMN categories VARCHAR(280) NOT NULL;

@@ -11,6 +11,7 @@ if (isset($_POST["price_filter"])) {
     $order = $_POST["price_filter"];
     $filter = "ORDER BY price ".$order;
 }
+
 if (empty($query)) {
     $db = getDB();
     $qString = "SELECT id,name, quantity, price, description, user_id from Products ".$filter." LIMIT 10";
