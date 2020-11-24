@@ -40,8 +40,8 @@ if (empty($query)) {
         <div class="input-group-prepend">
         <select class="form-control mx-1" id="price" name="price_filter" value="">
                 <option value="">By Price</option>
-                <option value="DESC">Ascending</option>
-                <option value="ASC">Descending</option>
+                <option value="ASC">Ascending</option>
+                <option value="DESC">Descending</option>
         </select>
         
         </div>
