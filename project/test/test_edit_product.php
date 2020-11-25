@@ -23,10 +23,11 @@ if(isset($_POST["save"])){
 	$price = $_POST["price"];
 	$desc = $_POST["description"];
 	$vis = $_POST["visibility"];
+	$cat = $_POST["categories"];
 	$user = get_user_id();
 	$db = getDB();
 	if(isset($id)){
-		$stmt = $db->prepare("UPDATE Products set name=:name, quantity=:quantity, price=:price, description=:desc, visibility=:visibility where id=:id");
+		$stmt = $db->prepare("UPDATE Products set name=:name, quantity=:quantity, price=:price, description=:desc, visibility=:visibility, categories=:categories where id=:id");
 		//$stmt = $db->prepare("INSERT INTO F20_Eggs (name, state, base_rate, mod_min, mod_max, next_stage_time, user_id) VALUES(:name, :state, :br, :min,:max,:nst,:user)");
 		$r = $stmt->execute([
 			":name"=>$name,
@@ -34,6 +35,7 @@ if(isset($_POST["save"])){
 			":price"=>$price,
 			":desc"=>$desc,
 			":visibility"=>$vis,
+			":categories"=>$cat,
 			":id"=>$id
 		]);
 		if($r){
@@ -78,6 +80,10 @@ if(isset($id)){
 	<div class="form-group">
 		<label for="description">Description:</label>
 		<textarea class="form-control" id="description" name="description" rows="4" cols="50"><?php echo $result["description"];?></textarea>
+	</div>
+	<div class="form-group">
+		<label for="categories">Categories:</label>
+		<textarea class="form-control" id="categories" name="categories" rows="2" cols="50"><?php echo $result["categories"];?></textarea>
 	</div>
 	<div class="form-group">
 		<div class="form-check">

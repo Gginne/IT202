@@ -26,6 +26,10 @@ if (!has_role("Admin")) {
 		<textarea class="form-control" id="description" name="description" rows="4" cols="50"></textarea>
 	</div>
 	<div class="form-group">
+		<label for="categories">Categories:</label>
+		<textarea class="form-control" id="categories" name="categories" rows="2" cols="50"></textarea>
+	</div>
+	<div class="form-group">
 		<div class="form-check">
 			<input class="form-check-input" type="radio" name="visibility" id="visibility" value="1" checked>
 			<label class="form-check-label" for="visibility">
@@ -49,17 +53,19 @@ if(isset($_POST["save"])){
 	$quantity = $_POST["quantity"];
 	$price = $_POST["price"];
 	$desc = $_POST["description"];
+	$cat = $_POST["categories"];
 	$vis = $_POST["visibility"];
 	$user = get_user_id();
 	$db = getDB();
-	$stmt = $db->prepare("INSERT INTO Products (name, quantity, price, description, user_id, visibility) VALUES(:name, :quantity, :price, :desc,:user,:visibility)");
+	$stmt = $db->prepare("INSERT INTO Products (name, quantity, price, description, user_id, visibility, categories) VALUES(:name, :quantity, :price, :desc,:user,:visibility,:categories)");
 	$r = $stmt->execute([
 		":name"=>$name,
 		":quantity"=>$quantity,
 		":price"=>$price,
 		":desc"=>$desc,
 		":user"=>$user,
-		":visibility"=>$vis
+		":visibility"=>$vis,
+		":categories"=>$cat
 	]);
 	if($r){
 		flash("Created successfully with id: " . $db->lastInsertId());
