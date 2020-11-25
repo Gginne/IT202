@@ -33,7 +33,7 @@ $carts = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <tr>
                 <th scope="row"><?php safer_echo(get_product_name($cart["product_id"])); ?></th>
                 <td>
-                <input class="mx-1 w-25" id="quantity-<?php safer_echo($cart["product_id"]); ?>" min="1" max="<?= in_stock($cart["product_id"]); ?>" value="<?php safer_echo($cart["quantity"]); ?>" type="number"> 
+                <input class="mx-1 w-25" id="quantity-<?php safer_echo($cart["product_id"]); ?>" min="0" max="<?= in_stock($cart["product_id"]); ?>" value="<?php safer_echo($cart["quantity"]); ?>" type="number"> 
                 <a href="#" onClick="editCart(<?= safer_echo($cart["product_id"]);?>)">Edit</a>
                 </td>
                 <td>$<?php safer_echo(get_product_price($cart["product_id"])); ?></td>
@@ -42,9 +42,11 @@ $carts = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </tr>
             <?php endforeach; ?>
             <tbody>
+       
     </table>
+    <div class="float-right"><a href="#" class="btn btn-danger" onClick="deleteCart(all)">Clear All</a></div>
     <?php else: ?>
-        <p>Empty cart, <a href="../shop/">let's change that</a></p>
+        <p>Empty cart, <a href="../shop/catalog.php">let's change that</a></p>
     <?php endif; ?>
 </div>
 
@@ -86,7 +88,7 @@ $carts = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 let json = JSON.parse(this.responseText);
                 if (json) {
                     if (json.status == 200) {
-                        alert("Successfully removed " + json.cart.name + " from cart");
+                        alert("Successfully removed " + json.cart.name || + " from cart");
                         location.reload();
                     } else {
                         alert(json.error);

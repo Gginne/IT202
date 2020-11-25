@@ -40,8 +40,12 @@ $cart = [
 
 $db = getDB();
 $r = null;
+
+//Clear Cart
+
+
 if($qt > 0) {
-    $stmt = $db->prepare("INSERT INTO Carts (product_id, quantity, price, user_id) VALUES(:product, :quantity, :price, :user) on duplicate key update quantity = :quantity");
+    $stmt = $db->prepare("INSERT INTO Carts (product_id, quantity, price, user_id) VALUES(:product, :quantity, :price, :user) on duplicate key update quantity = :quantity WHERE user_id=:user");
     $r = $stmt->execute([
         ":product" => $cart["product_id"],
         ":quantity" => $cart["quantity"],
@@ -50,12 +54,16 @@ if($qt > 0) {
     ]);
    
 } else {
-        $stmt = $db->prepare("DELETE FROM Carts WHERE product_id=:product AND user_id=:user");
-        $r = $stmt->execute([
-            ":product" => $cart["product_id"],
-            ":user" => $cart["user_id"]
-        ]); 
-   
+        if($id == "all"){
+            $stmt = $db->prepare("DELETE FROM Carts WHERE user_id=:user"); 
+            $r = $stmt->execute([":user" => $cart["user_id"]]);  
+        } else{
+            $stmt = $db->prepare("DELETE FROM Carts WHERE product_id=:product AND user_id=:user");
+            $r = $stmt->execute([
+                ":product" => $cart["product_id"],
+                ":user" => $cart["user_id"]
+            ]); 
+        }
 } 
 
 if ($r) {
