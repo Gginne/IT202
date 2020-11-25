@@ -86,7 +86,6 @@ $carts = $stmt->fetchAll(PDO::FETCH_ASSOC);
         let xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
-                console.log(this.responseText)
                 let json = JSON.parse(this.responseText);
                 if (json) {
                     if (json.status == 200) {
