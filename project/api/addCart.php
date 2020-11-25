@@ -4,18 +4,8 @@ require_once(__DIR__ . "/../lib/helpers.php");
 if (!is_logged_in()) {
     die(header(':', true, 403));
 }
-$testing = false;
-if (isset($_GET["test"])) {
-    $testing = true;
-}
 
-//TODO check if user can afford
-//get number of eggs in ownership
-//first egg is free
-//each egg extra is base_cost * #_of_eggs
-//$eggs_owned = 0;
-//$base_cost = 10;
-//$cost = $eggs_owned * $base_cost;
+
 $id = null;
 $qt = null;
 if (isset($_POST["id"])) {
@@ -24,6 +14,10 @@ if (isset($_POST["id"])) {
 
 if(isset($_POST["qt"])){
     $qt = $_POST["qt"];
+    if(is_numeric($id) && ($qt < 0 || $qt > in_stock($id))){
+        flash("Invalid cart quantity");
+        die(header("Location: ../cart/my_cart.php"));
+    }
 }
 
 $price = get_product_price($id);
@@ -45,7 +39,7 @@ $r = null;
 
 
 if($qt > 0) {
-    $stmt = $db->prepare("INSERT INTO Carts (product_id, quantity, price, user_id) VALUES(:product, :quantity, :price, :user) on duplicate key update quantity = :quantity WHERE user_id=:user");
+    $stmt = $db->prepare("INSERT INTO Carts (product_id, quantity, price, user_id) VALUES(:product, :quantity, :price, :user) on duplicate key update quantity = :quantity");
     $r = $stmt->execute([
         ":product" => $cart["product_id"],
         ":quantity" => $cart["quantity"],
@@ -56,7 +50,9 @@ if($qt > 0) {
 } else {
         if($id == "all"){
             $stmt = $db->prepare("DELETE FROM Carts WHERE user_id=:user"); 
-            $r = $stmt->execute([":user" => $cart["user_id"]]);  
+            $r = $stmt->execute([
+                ":user" => $cart["user_id"]
+            ]);  
         } else{
             $stmt = $db->prepare("DELETE FROM Carts WHERE product_id=:product AND user_id=:user");
             $r = $stmt->execute([

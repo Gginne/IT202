@@ -44,7 +44,7 @@ $carts = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <tbody>
        
     </table>
-    <div class="float-right"><a href="#" class="btn btn-danger" onClick="deleteCart(all)">Clear All</a></div>
+    <div class="float-right"><button class="btn btn-danger" onClick="deleteCart('all')">Clear All</button></div>
     <?php else: ?>
         <p>Empty cart, <a href="../shop/catalog.php">let's change that</a></p>
     <?php endif; ?>
@@ -73,6 +73,7 @@ $carts = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 }
             }
         };
+        
         xhttp.open("POST", "<?php echo getURL("api/addCart.php");?>", true);
         //this is required for post ajax calls to submit it as a form
         xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -85,10 +86,11 @@ $carts = $stmt->fetchAll(PDO::FETCH_ASSOC);
         let xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
+                console.log(this.responseText)
                 let json = JSON.parse(this.responseText);
                 if (json) {
                     if (json.status == 200) {
-                        alert("Successfully removed " + json.cart.name || + " from cart");
+                        alert("Successfully removed " + (id == "all" ? "all" : json.cart.name) + " from cart");
                         location.reload();
                     } else {
                         alert(json.error);
@@ -96,6 +98,7 @@ $carts = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 }
             }
         };
+        
         xhttp.open("POST", "<?php echo getURL("api/addCart.php");?>", true);
         //this is required for post ajax calls to submit it as a form
         xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
