@@ -3,6 +3,7 @@
 //$balance = getBalance();
 $query = "";
 $category = "";
+$order = "";
 $filter = "";
 $results = [];
 if (isset($_POST["query"])) {
@@ -50,14 +51,14 @@ if (empty($query)) {
         <div class="input-group-prepend">
         <select class="form-control mx-1" id="price" name="price_filter" value="">
                 <option value="">By Price</option>
-                <option value="ASC">Ascending</option>
-                <option value="DESC">Descending</option>
+                <option value="ASC" <?php echo ($order == "ASC" ? 'selected="selected"' : ''); ?> >Ascending</option>
+                <option value="DESC" <?php echo ($order == "DESC" ? 'selected="selected"' : ''); ?> >Descending</option>
         </select>
         <select class="form-control mx-1" id="category" name="cat_filter" value="">
                 <option value="">By Category</option>
-                <option value="sneakers">Sneakers</option>
-                <option value="shoes">Shoes</option>
-                <option value="velcro">Velcro</option>
+                <option value="sneakers" <?php echo ($category == "sneakers" ? 'selected="selected"' : ''); ?> >Sneakers</option>
+                <option value="shoes" <?php echo ($category == "shoes" ? 'selected="selected"' : ''); ?> >Shoes</option>
+                <option value="velcro" <?php echo ($category == "velcro" ? 'selected="selected"' : ''); ?> >Velcro</option>
         </select>
         
         </div>
