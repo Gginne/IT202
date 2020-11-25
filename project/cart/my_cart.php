@@ -14,6 +14,7 @@ $r = $stmt->execute([
     ":user" => get_user_id()
 ]);
 $carts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$cart_total = 0;
 ?>
 <h3><?= get_username() ?>'s Cart</h3>
 <div class="results mt-3">
@@ -40,11 +41,22 @@ $carts = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <td>$<?php safer_echo(get_product_price($cart["product_id"])*$cart["quantity"]); ?></td>
                 <td><a href="#" class="text-danger" onClick="deleteCart(<?= safer_echo($cart["product_id"]);?>)">Delete</a></td>
             </tr>
+            <?php $cart_total += get_product_price($cart["product_id"])*$cart["quantity"] ?> 
             <?php endforeach; ?>
             <tbody>
        
     </table>
-    <div class="float-right"><button class="btn btn-danger" onClick="deleteCart('all')">Clear All</button></div>
+    <form class="form-inline float-right">
+    <div class="form-group">
+       <label for="cart-total"><b>Cart Total:  </b></label>
+       <input class="form-control mx-2" style="max-width: 7rem;" name="cart-total" id="cart-total" type="text" value="$<?= $cart_total ?>" readonly>
+    </div>
+    <div class="form-group mx-2">
+        <button class="btn btn-success mx-1" onClick="deleteCart('all')">Buy Cart</button>
+        <button class="btn btn-danger mx-1" onClick="deleteCart('all')">Clear Cart</button>
+        
+    </div>
+    </form>
     <?php else: ?>
         <p>Empty cart, <a href="../shop/catalog.php">let's change that</a></p>
     <?php endif; ?>
