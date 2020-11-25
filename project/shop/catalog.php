@@ -2,20 +2,27 @@
 <?php
 //$balance = getBalance();
 $query = "";
+$category = "";
 $filter = "";
 $results = [];
 if (isset($_POST["query"])) {
     $query = $_POST["query"];
 }
+
+if (isset($_POST["cat_filter"])) {
+    $category = $_POST["cat_filter"];
+}
+
 if (isset($_POST["price_filter"])) {
     $order = $_POST["price_filter"];
-    $filter = "ORDER BY price ".$order;
+    $filter .=  "ORDER BY price $order";
 }
+
 if (empty($query)) {
     $db = getDB();
-    $qString = "SELECT id,name, quantity, price, description, user_id from Products ".$filter." LIMIT 10";
+    $qString = "SELECT id,name, quantity, price, description, user_id from Products WHERE categories like :c $filter LIMIT 10";
     $stmt = $db->prepare($qString);
-    $r = $stmt->execute();  
+    $r = $stmt->execute([":c" => "%$category%"]);  
     if ($r) {
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -24,9 +31,12 @@ if (empty($query)) {
     }
 } else if (isset($_POST["search"]) && !empty($query)) {
     $db = getDB();
-    $qString = "SELECT id,name, quantity, price, description, user_id from Products WHERE name like :q ".$filter." LIMIT 10";
+    $qString = "SELECT id,name, quantity, price, description, user_id from Products WHERE name like :q and categories like :c $filter LIMIT 10";
     $stmt = $db->prepare($qString);
-    $r = $stmt->execute([":q" => "%$query%"]);
+    $r = $stmt->execute([
+        ":q" => "%$query%",
+        ":c" => "%$category%"
+    ]);
     if ($r) {
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -42,6 +52,12 @@ if (empty($query)) {
                 <option value="">By Price</option>
                 <option value="ASC">Ascending</option>
                 <option value="DESC">Descending</option>
+        </select>
+        <select class="form-control mx-1" id="category" name="cat_filter" value="">
+                <option value="">By Category</option>
+                <option value="sneakers">Sneakers</option>
+                <option value="shoes">Shoes</option>
+                <option value="velcro">Velcro</option>
         </select>
         
         </div>
