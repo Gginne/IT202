@@ -32,7 +32,7 @@ $cart_total = 0;
         <tbody>
             <?php foreach ($carts as $cart): ?>
             <tr>
-                <th scope="row"><?php safer_echo(get_product_name($cart["product_id"])); ?></th>
+                <td scope="row"><b><?= get_product_name($cart["product_id"]); ?></b> <a href="../shop/product.php?id=<?php safer_echo($cart["product_id"]); ?>">  View</a></td>
                 <td>
                 <input class="mx-1 w-25" id="quantity-<?php safer_echo($cart["product_id"]); ?>" min="0" max="<?= in_stock($cart["product_id"]); ?>" value="<?php safer_echo($cart["quantity"]); ?>" type="number"> 
                 <a href="#" onClick="editCart(<?= safer_echo($cart["product_id"]);?>)">Edit</a>
