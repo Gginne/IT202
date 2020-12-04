@@ -35,13 +35,18 @@ if(isset($_GET["page"])){
 
 if (isset($_POST["search"]) || empty($query)) {
     $db = getDB();
-    $stmt = $db->prepare("SELECT count(*) as total from Products p WHERE p.visibility = 1 and p.name like :q and p.categories like :c");
+    $qString = "SELECT id, name, quantity, price, description, user_id from Products WHERE visibility = 1 and name like :q and categories like :c $filter LIMIT :offset, :count";
+    $qTotal = "SELECT count(*) as total from Products p WHERE p.visibility = 1 and p.name like :q and p.categories like :c";
     if(has_role("Admin")){
-        $stmt = $db->prepare("SELECT count(*) as total from Products p WHERE p.name like :q and p.categories like :c");
+        $qString = "SELECT id, name, quantity, price, description, user_id from Products WHERE name like :q and categories like :c $filter LIMIT :offset, :count";
+        $qTotal = "SELECT count(*) as total from Products p WHERE p.name like :q and p.categories like :c"; 
     }  
-    $stmt->bindValue(":q", "%$query%", PDO::PARAM_STR);
-    $stmt->bindValue(":c", "%$category%", PDO::PARAM_STR);
-    $stmt->execute();
+
+    $stmt = $db->prepare($qTotal);
+    $stmt->execute([
+        ":q" => "%$query%",
+        ":c" => "%$category%"
+    ]);
 
     $results = $stmt->fetch(PDO::FETCH_ASSOC);
     if($results){
@@ -50,10 +55,6 @@ if (isset($_POST["search"]) || empty($query)) {
     $total_pages = ceil($total / $per_page);
     $offset = ($page-1) * $per_page;
 
-    $qString = "SELECT id, name, quantity, price, description, user_id from Products WHERE visibility = 1 and name like :q and categories like :c $filter LIMIT :offset, :count";
-    if(has_role("Admin")){
-        $qString = "SELECT id, name, quantity, price, description, user_id from Products WHERE name like :q and categories like :c $filter LIMIT :offset, :count";
-    } 
     
     $stmt = $db->prepare($qString);
     $stmt->bindValue(":offset", $offset, PDO::PARAM_INT);
