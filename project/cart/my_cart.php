@@ -11,6 +11,7 @@ $page = 1;
 $per_page = 6;
 $carts = [];
 $cart_total = 0;
+$cart_cost = 0;
 
 if(isset($_GET["page"])){
     try {
@@ -22,7 +23,7 @@ if(isset($_GET["page"])){
 }
 
 $db = getDB();
-$stmt = $db->prepare("SELECT count(*) as total FROM Carts c WHERE c.user_id = :user");
+$stmt = $db->prepare("SELECT count(*) as total, SUM(price*quantity) as cost FROM Carts c WHERE c.user_id = :user");
 $stmt->execute([
     ":user" => get_user_id()
 ]);
@@ -30,6 +31,7 @@ $stmt->execute([
 $results = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if($results){
+    $cart_cost = $results["cost"];
     $cart_total = (int)$results["total"];
 }
 
@@ -80,7 +82,6 @@ if($e[0] != "00000"){
                 <td>$<?php safer_echo(get_product_price($cart["product_id"])*$cart["quantity"]); ?></td>
                 <td><a href="#" class="text-danger" onClick="deleteCart(<?= safer_echo($cart["product_id"]);?>)">Delete</a></td>
             </tr>
-            <?php $cart_total += get_product_price($cart["product_id"])*$cart["quantity"] ?> 
             <?php endforeach; ?>
             <tbody>
        
@@ -88,10 +89,10 @@ if($e[0] != "00000"){
     <form class="form-inline float-right">
     <div class="form-group">
        <label for="cart-total"><b>Cart Total:  </b></label>
-       <input class="form-control mx-2" style="max-width: 7rem;" name="cart-total" id="cart-total" type="text" value="$<?= $cart_total ?>" readonly>
+       <input class="form-control mx-2" style="max-width: 7rem;" name="cart-total" id="cart-total" type="text" value="$<?= $cart_cost ?>" readonly>
     </div>
     <div class="form-group mx-2">
-        <button class="btn btn-success mx-1" onClick="deleteCart('all')">Buy Cart</button>
+        <button class="btn btn-success mx-1" onClick="">Buy Cart</button>
         <button class="btn btn-danger mx-1" onClick="deleteCart('all')">Clear Cart</button>
         
     </div>
