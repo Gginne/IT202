@@ -7,14 +7,53 @@ if (!is_logged_in()) {
 }
 ?>
 <?php
+$page = 1;
+$per_page = 6;
+$carts = [];
+$cart_total = 0;
+
+if(isset($_GET["page"])){
+    try {
+        $page = (int)$_GET["page"];
+    }
+    catch(Exception $e){
+
+    }
+}
 
 $db = getDB();
-$stmt = $db->prepare("SELECT product_id, quantity, price FROM Carts WHERE user_id = :user");
-$r = $stmt->execute([
+$stmt = $db->prepare("SELECT count(*) as total FROM Carts c WHERE c.user_id = :user");
+$stmt->execute([
     ":user" => get_user_id()
 ]);
-$carts = $stmt->fetchAll(PDO::FETCH_ASSOC);
-$cart_total = 0;
+
+$results = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if($results){
+    $cart_total = (int)$results["total"];
+}
+
+$total_pages = ceil($cart_total / $per_page);
+$offset = ($page-1) * $per_page;
+
+$stmt = $db->prepare("SELECT product_id, quantity, price as total FROM Carts WHERE user_id = :user LIMIT :offset, :count");
+$stmt->bindValue(":offset", $offset, PDO::PARAM_INT);
+$stmt->bindValue(":count", $per_page, PDO::PARAM_INT);
+$stmt->bindValue(":user", get_user_id(), PDO::PARAM_STR);
+
+$r = $stmt->execute();
+$e = $stmt->errorInfo();
+
+if($e[0] != "00000"){
+    flash(var_export($e, true), "alert");
+} else if($r){
+    $carts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} else {
+    flash("There was a problem fetching the cart");
+}
+
+
+
 ?>
 <h3><?= get_username() ?>'s Cart</h3>
 <div class="results mt-3">
@@ -60,6 +99,20 @@ $cart_total = 0;
     <?php else: ?>
         <p>Empty cart, <a href="../shop/catalog.php">let's change that</a></p>
     <?php endif; ?>
+    <br><br>
+    <nav aria-label="My Eggs">
+        <ul class="pagination justify-content-center">
+            <li class="page-item <?php echo ($page-1) < 1?"disabled":"";?>">
+                <a class="page-link" href="?page=<?php echo $page-1;?>" tabindex="-1">Previous</a>
+            </li>
+            <?php for($i = 0; $i < $total_pages; $i++):?>
+            <li class="page-item <?php echo ($page-1) == $i?"active":"";?>"><a class="page-link" href="?page=<?php echo ($i+1);?>"><?php echo ($i+1);?></a></li>
+            <?php endfor; ?>
+            <li class="page-item <?php echo ($page+1) >= $total_pages?"disabled":"";?>">
+                <a class="page-link" href="?page=<?php echo $page+1;?>">Next</a>
+            </li>
+        </ul>
+    </nav>
 </div>
 
 <script>

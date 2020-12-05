@@ -6,6 +6,10 @@ $category = "";
 $order = "";
 $filter = "";
 $results = [];
+$total = 0;
+$page = 1;
+$per_page = 8;
+
 if (isset($_POST["query"])) {
     $query = $_POST["query"];
 }
@@ -19,32 +23,57 @@ if (isset($_POST["price_filter"])) {
     $filter .=  "ORDER BY price $order";
 }
 
-if (empty($query)) {
-    $db = getDB();
-    $qString = "SELECT id,name, quantity, price, description, user_id from Products WHERE categories like :c $filter LIMIT 10";
-    $stmt = $db->prepare($qString);
-    $r = $stmt->execute([":c" => "%$category%"]);  
-    if ($r) {
-        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+if(isset($_GET["page"])){
+    try {
+        $page = (int)$_GET["page"];
     }
-    else {
-        flash("There was a problem fetching the results");
+    catch(Exception $e){
+
     }
-} else if (isset($_POST["search"]) && !empty($query)) {
+}
+
+
+if (isset($_POST["search"]) || empty($query)) {
     $db = getDB();
-    $qString = "SELECT id,name, quantity, price, description, user_id from Products WHERE name like :q and categories like :c $filter LIMIT 10";
-    $stmt = $db->prepare($qString);
-    $r = $stmt->execute([
+    $qString = "SELECT id, name, quantity, price, description, user_id from Products WHERE visibility = 1 and name like :q and categories like :c $filter LIMIT :offset, :count";
+    $qTotal = "SELECT count(*) as total from Products p WHERE p.visibility = 1 and p.name like :q and p.categories like :c";
+    if(has_role("Admin")){
+        $qString = "SELECT id, name, quantity, price, description, user_id from Products WHERE name like :q and categories like :c $filter LIMIT :offset, :count";
+        $qTotal = "SELECT count(*) as total from Products p WHERE p.name like :q and p.categories like :c"; 
+    }  
+
+    $stmt = $db->prepare($qTotal);
+    $stmt->execute([
         ":q" => "%$query%",
         ":c" => "%$category%"
     ]);
-    if ($r) {
-        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    $results = $stmt->fetch(PDO::FETCH_ASSOC);
+    if($results){
+        $total = (int)$results["total"];
     }
-    else {
+    $total_pages = ceil($total / $per_page);
+    $offset = ($page-1) * $per_page;
+
+    
+    $stmt = $db->prepare($qString);
+    $stmt->bindValue(":offset", $offset, PDO::PARAM_INT);
+    $stmt->bindValue(":count", $per_page, PDO::PARAM_INT);
+    $stmt->bindValue(":q", "%$query%", PDO::PARAM_STR);
+    $stmt->bindValue(":c", "%$category%", PDO::PARAM_STR);
+    $r = $stmt->execute();
+
+    $e = $stmt->errorInfo();
+    if($e[0] != "00000"){
+        flash(var_export($e, true), "alert");
+    } else if($r) {
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } else {
         flash("There was a problem fetching the results");
     }
+    
 }
+
 ?>
 <form method="POST" class="mx-auto mb-3" style="width: 60rem;">
     <div class="input-group">
@@ -74,7 +103,7 @@ if (empty($query)) {
     <?php if (count($results) > 0): ?>
         <div class="row">
             <?php foreach ($results as $r): ?>
-                <?php if(is_visible($r["id"]) && $r): ?>
+                <?php if($r): ?>
                     <div class="col-sm-3">
                     <div class="card my-3">
                         <div class="card-body">
@@ -96,6 +125,19 @@ if (empty($query)) {
     <?php else: ?>
         <p>No results</p>
     <?php endif; ?>
+    <nav aria-label="My Eggs">
+            <ul class="pagination justify-content-center">
+                <li class="page-item <?php echo ($page-1) < 1?"disabled":"";?>">
+                    <a class="page-link" href="?page=<?php echo $page-1;?>" tabindex="-1">Previous</a>
+                </li>
+                <?php for($i = 0; $i < $total_pages; $i++):?>
+                <li class="page-item <?php echo ($page-1) == $i?"active":"";?>"><a class="page-link" href="?page=<?php echo ($i+1);?>"><?php echo ($i+1);?></a></li>
+                <?php endfor; ?>
+                <li class="page-item <?php echo ($page+1) >= $total_pages?"disabled":"";?>">
+                    <a class="page-link" href="?page=<?php echo $page+1;?>">Next</a>
+                </li>
+            </ul>
+        </nav>
 </div>
 <script>
         
