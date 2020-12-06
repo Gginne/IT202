@@ -46,9 +46,7 @@ $stmt->bindValue(":user", get_user_id(), PDO::PARAM_STR);
 $r = $stmt->execute();
 $e = $stmt->errorInfo();
 
-if($e[0] != "00000"){
-    flash(var_export($e, true), "alert");
-} else if($r){
+if($r){
     $carts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } else {
     flash("There was a problem fetching the cart");
