@@ -46,9 +46,7 @@ $stmt->bindValue(":user", get_user_id(), PDO::PARAM_STR);
 $r = $stmt->execute();
 $e = $stmt->errorInfo();
 
-if($e[0] != "00000"){
-    flash(var_export($e, true), "alert");
-} else if($r){
+if($r){
     $carts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } else {
     flash("There was a problem fetching the cart");
@@ -92,7 +90,7 @@ if($e[0] != "00000"){
        <input class="form-control mx-2" style="max-width: 7rem;" name="cart-total" id="cart-total" type="text" value="$<?= $cart_cost ?>" readonly>
     </div>
     <div class="form-group mx-2">
-        <button class="btn btn-success mx-1" onClick="">Buy Cart</button>
+        <a class="btn btn-success mx-1" href="./checkout.php">Buy Cart</a>
         <button class="btn btn-danger mx-1" onClick="deleteCart('all')">Clear Cart</button>
         
     </div>
