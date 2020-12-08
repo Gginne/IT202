@@ -21,6 +21,13 @@ if($r){
 }
 
 ?>
+<style>
+.checkout{
+    max-height: 350px;
+    overflow: scroll;
+    -webkit-overflow-scrolling: touch;
+}
+</style>
 <div class="container">
 
   <div class="row">
@@ -29,7 +36,7 @@ if($r){
         <span class="text-muted">Your cart</span>
         <span class="badge badge-secondary badge-pill"><?= count($cart) ?></span>
       </h4>
-      <ul class="list-group mb-3">
+      <ul class="list-group mb-3 checkout">
       <?php foreach ($cart as $c): ?>
         <li class="list-group-item d-flex justify-content-between lh-condensed">
           <div>
@@ -37,12 +44,12 @@ if($r){
           </div>
           <span class="text-muted">$<?= $c["price"]*$c["quantity"] ?></span>
         </li>
-        <?php endforeach; ?>
+      <?php endforeach; ?>
         
       </ul>
 
       <div class="card p-2">
-        <input class="btn btn-warning" type="submit" form="billing" value="Checkout"/>
+        <input class="btn btn-warning" type="submit" value="Checkout" form="checkout" onClick="makePurchase()" />
          
       </div>
     </div>

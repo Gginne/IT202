@@ -90,7 +90,7 @@ if($r){
        <input class="form-control mx-2" style="max-width: 7rem;" name="cart-total" id="cart-total" type="text" value="$<?= $cart_cost ?>" readonly>
     </div>
     <div class="form-group mx-2">
-        <button class="btn btn-success mx-1" onClick="">Buy Cart</button>
+        <a class="btn btn-success mx-1" href="./checkout.php">Buy Cart</a>
         <button class="btn btn-danger mx-1" onClick="deleteCart('all')">Clear Cart</button>
         
     </div>
