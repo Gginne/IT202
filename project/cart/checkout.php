@@ -47,7 +47,7 @@ if(isset($_POST["checkout"])){
     if ($r) {
         flash("Order succesfully processed");
     } else {
-        flash("There was an error in order processi");
+        flash("There was an error in order processing");
     }
 }
 
@@ -154,7 +154,25 @@ if(isset($_POST["checkout"])){
 <script>
 
     function makePurchase(){
+        let xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                let json = JSON.parse(this.responseText);
+                if (json) {
+                    if (json.status == 200) {
+                        alert("Successful purchase for the amout of $<?= $total; ?>");
+                        location.reload();
+                    } else {
+                        alert(json.error);
+                    }
+                }
+            }
+        };
         
+        xhttp.open("POST", "<?php echo getURL("api/purchase.php");?>", true);
+        //this is required for post ajax calls to submit it as a form
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
     }  
 
     
