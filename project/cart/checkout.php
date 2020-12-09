@@ -20,6 +20,37 @@ if($r){
     flash("There was a problem fetching the cart");
 }
 
+$total = 0;
+$stmt = $db->prepare("SELECT SUM(price*quantity) as total FROM Carts c WHERE c.user_id = :user");
+$stmt->execute([
+    ":user" => get_user_id()
+]);
+$res =  $stmt->fetch(PDO::FETCH_ASSOC);
+$total = $res["total"];
+
+if(isset($_POST["checkout"])){
+    $address = isset($_POST["address"]) ? $_POST["address"] : "";
+    $city = isset($_POST["city"]) ? $_POST["city"] : "";
+    $country = isset($_POST["country"]) ? $_POST["country"] : "";
+    $zip = isset($_POST["zip"]) ? $_POST["zip"] : "";
+    $payment = $_POST["payment"];
+
+    $final_address = "$address $city, $country $zip";
+
+    $stmt = $db->prepare("INSERT INTO Orders (total_price, payment_method, address, user_id) VALUES(:total, :payment, :address, :user)");
+    $r = $stmt->execute([
+        ":total" => $total,
+        ":payment" => $payment,
+        ":address" => $final_address,
+        ":user" => get_user_id()
+    ]);
+    if ($r) {
+        flash("Order succesfully processed");
+    } else {
+        flash("There was an error in order processi");
+    }
+}
+
 ?>
 <style>
 .checkout{
@@ -49,17 +80,17 @@ if($r){
       </ul>
 
       <div class="card p-2">
-        <input class="btn btn-warning" type="submit" value="Checkout" form="checkout" onClick="makePurchase()" />
+        <input class="btn btn-warning" type="submit" name="checkout" value="Checkout" form="billing" />
          
       </div>
     </div>
     <div class="col-md-8 order-md-1">
       <h4 class="mb-3">Billing address</h4>
-      <form class="needs-validation" id="billing">
+      <form class="needs-validation" id="billing" method="POST" onSubmit="makePurchase()">
        
         <div class="mb-3">
           <label for="address">Address</label>
-          <input type="text" class="form-control" id="address" placeholder="1234 Main St" required>
+          <input type="text" class="form-control" name="address" id="address" placeholder="1234 Main St" required>
           <div class="invalid-feedback">
             Please enter your shipping address.
           </div>
@@ -68,27 +99,21 @@ if($r){
         <div class="row">
           <div class="col-md-5 mb-3">
             <label for="country">Country</label>
-            <select class="custom-select d-block w-100" id="country" required>
-              <option value="">Choose...</option>
-              <option>United States</option>
-            </select>
+            <input type="text" class="form-control" name="country" id="country" placeholder="Enter country" required>
             <div class="invalid-feedback">
-              Please select a valid country.
+              Please enter your country.
             </div>
           </div>
           <div class="col-md-4 mb-3">
-            <label for="state">State</label>
-            <select class="custom-select d-block w-100" id="state" required>
-              <option value="">Choose...</option>
-              <option>California</option>
-            </select>
+          <label for="city">City</label>
+            <input type="text" class="form-control" name="city" id="city" placeholder="Enter city" required>
             <div class="invalid-feedback">
-              Please provide a valid state.
+              Please enter your city.
             </div>
           </div>
           <div class="col-md-3 mb-3">
             <label for="zip">Zip</label>
-            <input type="text" class="form-control" id="zip" placeholder="" required>
+            <input type="text" class="form-control" pattern="[0-9]{5}" name="zip" id="zip" placeholder="Enter ZIP code" required>
             <div class="invalid-feedback">
               Zip code required.
             </div>
@@ -100,23 +125,23 @@ if($r){
 
         <div class="d-block my-3">
           <div class="custom-control custom-radio">
-            <input id="credit" name="paymentMethod" type="radio" class="custom-control-input" checked required>
+            <input id="cash" value="cash" name="payment" type="radio" class="custom-control-input" checked required>
             <label class="custom-control-label" for="credit">Cash</label>
           </div>
           <div class="custom-control custom-radio">
-            <input id="credit" name="paymentMethod" type="radio" class="custom-control-input" required>
+            <input id="paypal" value="paypal" name="payment" type="radio" class="custom-control-input" required>
             <label class="custom-control-label" for="credit">Paypal</label>
           </div>
           <div class="custom-control custom-radio">
-            <input id="debit" name="paymentMethod" type="radio" class="custom-control-input" required>
+            <input id="amex" value="amex" name="payment" type="radio" class="custom-control-input" required>
             <label class="custom-control-label" for="debit">American Express</label>
           </div>
           <div class="custom-control custom-radio">
-            <input id="paypal" name="paymentMethod" type="radio" class="custom-control-input" required>
+            <input id="visa" value="visa" name="payment" type="radio" class="custom-control-input" required>
             <label class="custom-control-label" for="paypal">Visa</label>
           </div>
           <div class="custom-control custom-radio">
-            <input id="paypal" name="paymentMethod" type="radio" class="custom-control-input" required>
+            <input id="mastercard" value="mastercard" name="payment" type="radio" class="custom-control-input" required>
             <label class="custom-control-label" for="paypal">Mastercard</label>
           </div>
         </div>
@@ -129,7 +154,7 @@ if($r){
 <script>
 
     function makePurchase(){
-        alert("TBD")
+        
     }  
 
     
