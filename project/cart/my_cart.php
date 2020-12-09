@@ -38,7 +38,7 @@ if($results){
 $total_pages = ceil($cart_total / $per_page);
 $offset = ($page-1) * $per_page;
 
-$stmt = $db->prepare("SELECT product_id, quantity, price as total FROM Carts WHERE user_id = :user LIMIT :offset, :count");
+$stmt = $db->prepare("SELECT product_id, quantity, price FROM Carts WHERE user_id = :user LIMIT :offset, :count");
 $stmt->bindValue(":offset", $offset, PDO::PARAM_INT);
 $stmt->bindValue(":count", $per_page, PDO::PARAM_INT);
 $stmt->bindValue(":user", get_user_id(), PDO::PARAM_STR);
@@ -116,10 +116,6 @@ if($r){
 
 <script>
 
-    function makePurchase(){
-        alert("TBD")
-    }  
-
     function editCart(id) {
         //https://www.w3schools.com/xml/ajax_xmlhttprequest_send.asp
         let qt = Number(document.getElementById(`quantity-${id}`).value)
@@ -133,6 +129,7 @@ if($r){
                         location.reload();
                     } else {
                         alert(json.error);
+                        location.reload();
                     }
                 }
             }
@@ -157,6 +154,7 @@ if($r){
                         location.reload();
                     } else {
                         alert(json.error);
+                        location.reload();
                     }
                 }
             }

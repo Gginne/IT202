@@ -19,7 +19,7 @@ $name = get_product_name($id);
 if(isset($_POST["qt"])){
     $qt = $_POST["qt"];
     if(is_numeric($id) && ($qt < 0 || $qt > in_stock($id))){
-        $errMsg = "Cannot buy $qt $name only in_stock($id) available"
+        $errMsg = "Cannot add $qt $name to cart only ".in_stock($id)." in stock";
         $response = ["status" => 400, "error" => $errMsg];
         echo json_encode($response);
         die();
@@ -38,8 +38,6 @@ $cart = [
 
 $db = getDB();
 $r = null;
-
-//Clear Cart
 
 
 if($qt > 0) {
