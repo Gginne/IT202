@@ -95,9 +95,6 @@ if($r){
         
     </div>
     </form>
-    <?php else: ?>
-        <p>Empty cart, <a href="../shop/catalog.php">let's change that</a></p>
-    <?php endif; ?>
     <br><br>
     <nav aria-label="My Eggs">
         <ul class="pagination justify-content-center">
@@ -112,6 +109,10 @@ if($r){
             </li>
         </ul>
     </nav>
+    <?php else: ?>
+        <p>Empty cart, <a href="../shop/catalog.php">let's change that</a></p>
+    <?php endif; ?>
+    
 </div>
 
 <script>

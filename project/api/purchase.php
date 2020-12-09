@@ -5,7 +5,6 @@ if (!is_logged_in()) {
     die(header(':', true, 403));
 }
 
-
 $user = get_user_id();
 $carts = [];
 
@@ -18,11 +17,27 @@ $r = $stmt->execute([
 
 $carts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-//GET LAST ORDER ID 
+//GET LAST ORDER ID AND DELETE IF CANCELED ORDER
 $stmt = $db->prepare("SELECT id FROM Orders ORDER BY id DESC LIMIT 1");
 $stmt->execute();
 $res = $stmt->fetch(PDO::FETCH_ASSOC);
 $last_ord = $res["id"];
+
+if(isset($_POST["cancel"])){
+    $stmt = $db->prepare("DELETE FROM Orders WHERE id=:id");
+    $d = $stmt->execute([":id" => $last_ord]);
+    if($d){
+        $response = ["status" => 200, "msg" => "Cancelled order"];
+        echo json_encode($response);
+        die();
+    } else {
+        $response = ["status" => 200, "error" => "Processing error"];
+        echo json_encode($response);
+        die();
+    }
+    
+    
+}
 
 foreach ($carts as $c) {
 

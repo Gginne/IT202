@@ -35,7 +35,7 @@ $stmt->execute([
 $res =  $stmt->fetch(PDO::FETCH_ASSOC);
 $total = $res["total"];
 $confirm = false;
-$payment = "";
+$payment = "cash";
 $final_address = "";
 if(isset($_POST["checkout"])){
   $address = isset($_POST["address"]) ? $_POST["address"] : "";
@@ -75,23 +75,31 @@ if(isset($_POST["checkout"])){
     <div class="col-md-4 order-md-2 mb-4">
       <h4 class="d-flex justify-content-between align-items-center mb-3">
         <span class="text-muted">Your cart</span>
-        <span class="badge badge-secondary badge-pill"><?= count($cart) ?></span>
+        <span class="badge badge-secondary badge-pill"><?= count($cart); ?></span>
       </h4>
       <ul class="list-group mb-3 checkout">
       <?php foreach ($cart as $c): ?>
         <li class="list-group-item d-flex justify-content-between lh-condensed">
           <div>
-            <h6 class="my-0"><?= $c["quantity"]." ".get_product_name($c["product_id"]) ?></h6>
+            <h6 class="my-0"><?= $c["quantity"]." ".get_product_name($c["product_id"]); ?></h6>
           </div>
-          <span class="text-muted">$<?= $c["price"]*$c["quantity"] ?></span>
+          <span class="text-muted">$<?= $c["price"]*$c["quantity"]; ?></span>
         </li>
       <?php endforeach; ?>
-        
+      <li class="list-group-item d-flex justify-content-between lh-condensed">
+          <div>
+            <h6 class="my-0">total</h6>
+          </div>
+          <span class="text-muted">$<?= $total; ?></span>
+        </li>
       </ul>
     <?php if($confirm): ?>
       <div class="card p-2">
-        <input class="btn btn-success" type="submit" id="confirm" name="confirm" value="Confirm"/>
-         
+        <div class="btn-group">
+          <button class="btn btn-success" id="confirm">Confirm</button>
+          <button class="btn btn-danger"  id="cancel">Cancel</button>
+        </div>
+        
       </div>
     <?php endif; ?>
     </div>
@@ -101,7 +109,7 @@ if(isset($_POST["checkout"])){
        
         <div class="mb-3">
           <label for="address">Address</label>
-          <input type="text" class="form-control" name="address" id="address" placeholder="1234 Main St" <?= $confirm ? "disabled" : ""; ?> required>
+          <input type="text" class="form-control" name="address" id="address" placeholder="1234 Main St" <?= $confirm ? "value=".$_POST["address"]." disabled" : ""; ?> required>
           <div class="invalid-feedback">
             Please enter your shipping address.
           </div>
@@ -110,21 +118,21 @@ if(isset($_POST["checkout"])){
         <div class="row">
           <div class="col-md-5 mb-3">
             <label for="country">Country</label>
-            <input type="text" class="form-control" name="country" id="country" placeholder="Enter country" <?= $confirm ? "disabled" : ""; ?> required>
+            <input type="text" class="form-control" name="country" id="country" placeholder="Enter country" <?= $confirm ? "value=".$_POST["country"]." disabled" : ""; ?> required>
             <div class="invalid-feedback">
               Please enter your country.
             </div>
           </div>
           <div class="col-md-4 mb-3">
           <label for="city">City</label>
-            <input type="text" class="form-control" name="city" id="city" placeholder="Enter city" <?= $confirm ? "disabled" : ""; ?> required>
+            <input type="text" class="form-control" name="city" id="city" placeholder="Enter city" <?= $confirm ? "value=".$_POST["city"]." disabled" : ""; ?> required>
             <div class="invalid-feedback">
               Please enter your city.
             </div>
           </div>
           <div class="col-md-3 mb-3">
             <label for="zip">Zip</label>
-            <input type="text" class="form-control" pattern="[0-9]{5}" name="zip" id="zip" placeholder="Enter ZIP code" <?= $confirm ? "disabled" : ""; ?> required>
+            <input type="text" class="form-control" pattern="[0-9]{5}" name="zip" id="zip" placeholder="Enter ZIP code" <?= $confirm ? "value=".$_POST["zip"]." disabled" : ""; ?> required>
             <div class="invalid-feedback">
               Zip code required.
             </div>
@@ -136,23 +144,23 @@ if(isset($_POST["checkout"])){
 
         <div class="d-block my-3">
           <div class="custom-control custom-radio">
-            <input id="cash" value="cash" name="payment" type="radio" class="custom-control-input" checked <?= $confirm ? "disabled" : ""; ?> required>
+            <input id="cash" value="cash" name="payment" type="radio" class="custom-control-input" <?= $payment == "cash" ? "checked" : "" ?> <?= $confirm  ? "disabled" : ""; ?> required>
             <label class="custom-control-label" for="cash">Cash</label>
           </div>
           <div class="custom-control custom-radio">
-            <input id="paypal" value="paypal" name="payment" type="radio" class="custom-control-input" <?= $confirm ? "disabled" : ""; ?> required>
+            <input id="paypal" value="paypal" name="payment" type="radio" class="custom-control-input" <?= $payment == "paypal" ? "checked" : "" ?> <?= $confirm ? "disabled" : ""; ?> required>
             <label class="custom-control-label" for="paypal">Paypal</label>
           </div>
           <div class="custom-control custom-radio">
-            <input id="amex" value="amex" name="payment" type="radio" class="custom-control-input" <?= $confirm ? "disabled" : ""; ?> required>
+            <input id="amex" value="amex" name="payment" type="radio" class="custom-control-input" <?= $payment == "amex" ? "checked" : "" ?> <?= $confirm ? "disabled" : ""; ?> required>
             <label class="custom-control-label" for="amex">American Express</label>
           </div>
           <div class="custom-control custom-radio">
-            <input id="visa" value="visa" name="payment" type="radio" class="custom-control-input" <?= $confirm ? "disabled" : ""; ?> required>
+            <input id="visa" value="visa" name="payment" type="radio" class="custom-control-input" <?= $payment == "visa" ? "checked" : "" ?> <?= $confirm ? "disabled" : ""; ?> required>
             <label class="custom-control-label" for="visa">Visa</label>
           </div>
           <div class="custom-control custom-radio">
-            <input id="mastercard" value="mastercard" name="payment" type="radio" class="custom-control-input" <?= $confirm ? "disabled" : ""; ?> required>
+            <input id="mastercard" value="mastercard" name="payment" type="radio" class="custom-control-input" <?= $payment == "mastercard" ? "checked" : "" ?> <?= $confirm ? "disabled" : ""; ?> required>
             <label class="custom-control-label" for="mastercard">Mastercard</label>
           </div>
         </div>
@@ -194,6 +202,29 @@ if(isset($_POST["checkout"])){
         xhttp.send()
     })
     
+   document.getElementById("cancel").addEventListener('click', function(e){
+      
+      let xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                let json = JSON.parse(this.responseText);
+                if (json) {
+                    if (json.status == 200) {
+                        alert(json.msg);
+                        window.location.href = "../shop/catalog.php"
+                    } else {
+                        alert(json.error);
+                    }
+                }
+            }
+        };
+        
+        xhttp.open("POST", "<?php echo getURL("api/purchase.php");?>", true);
+        //this is required for post ajax calls to submit it as a form
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        //send request
+        xhttp.send(`cancel=true`)
+    })
     
 </script>
 <?php endif; ?>
