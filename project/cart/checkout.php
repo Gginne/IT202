@@ -88,7 +88,7 @@ if(isset($_POST["checkout"])){
       <?php endforeach; ?>
       <li class="list-group-item d-flex justify-content-between lh-condensed">
           <div>
-            <h6 class="my-0">total</h6>
+            <h6 class="my-0">Total Cost</h6>
           </div>
           <span class="text-muted">$<?= $total; ?></span>
         </li>

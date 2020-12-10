@@ -18,7 +18,14 @@ function has_role($role) {
     return false;
 }
 
-function get_username() {
+function get_username($id=null) {
+    if($id != null){
+        $db = getDB();
+        $stmt = $db->prepare("SELECT username FROM Users WHERE id = :id");
+        $stmt->execute([":id" => $id]);
+        $res = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $res["username"]; 
+    }
     if (is_logged_in() && isset($_SESSION["user"]["username"])) {
         return $_SESSION["user"]["username"];
     }
