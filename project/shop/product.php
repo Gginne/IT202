@@ -67,6 +67,7 @@ if (isset($id)) {
                         location.reload();
                     } else {
                         alert(json.error);
+                        location.reload();
                     }
                 }
             }

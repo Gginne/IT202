@@ -104,8 +104,8 @@ if(isset($_POST["checkout"])){
     <?php endif; ?>
     </div>
     <div class="col-md-8 order-md-1">
-      <h4 class="mb-3">Billing address</h4>
-      <form class="needs-validation" id="billing" method="POST">
+      <h4 class="mb-3">Shipping address</h4>
+      <form class="needs-validation" id="shipping" method="POST">
        
         <div class="mb-3">
           <label for="address">Address</label>
