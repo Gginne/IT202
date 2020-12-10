@@ -60,7 +60,7 @@ $orders = $stmt->fetchALL(PDO::FETCH_ASSOC);
 
 
 ?>
-<h3><?= $user != null ? get_username($user)."'s" : "" ?> Purchase History</h3>
+<h3><?= $user != null ? get_username($user)."'s" : "All" ?> Purchases </h3>
 <?php if($user != null && has_role("Admin")): ?><a href="./history.php?">view all</a><?php endif; ?>
 <div class="results mt-3">
     <?php if (count($orders) > 0): ?>
