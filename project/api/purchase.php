@@ -64,9 +64,11 @@ foreach ($carts as $c) {
     if($r){
         //UPDATE PRODUCTS QUANTITY
         $diff = $stock - $c["quantity"];
-        $stmt = $db->prepare("UPDATE Products set quantity=:quantity where id=:id");
+        $vis = $diff > 0 ? 1 : 0;
+        $stmt = $db->prepare("UPDATE Products set quantity=:quantity, visibility=:visibility where id=:id");
         $stmt->execute([
             ":quantity" => $diff,
+            ":visibility" => $vis,
             ":id" => $c["product_id"]
         ]);
     } else {
