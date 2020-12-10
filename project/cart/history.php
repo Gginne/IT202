@@ -34,11 +34,11 @@ $qtotal = null;
 if(has_role("Admin") && $user == null){
     #SELECT ALL ORDERS
     $stmt = $db->prepare("SELECT o.created, o.user_id, o.address, o.payment_method, oi.product_id, oi.quantity, oi.unit_price FROM OrderItems AS oi INNER JOIN Orders AS o ON oi.orderRef=o.id LIMIT :offset, :count");
-    $qtotal = $db->prepare("SELECT count(*) as total FROM OrdersItems");
+    $qtotal = $db->prepare("SELECT count(*) as total FROM OrderItems");
 } else{
     #SELECT USER'S ORDERS
-    $stmt = $db->prepare("SELECT o.created, o.address, o.payment_method, oi.product_id, oi.quantity, oi.unit_price FROM OrderItems AS oi INNER JOIN Orders AS o ON oi.orderRef=o.id WHERE o.user_id=:user LIMIT :offset, :count");
-    $qtotal = $db->prepare("SELECT count(*) as total FROM OrderItems WHERE o.user_id=:user");
+    $stmt = $db->prepare("SELECT o.created, o.user_id, o.address, o.payment_method, oi.product_id, oi.quantity, oi.unit_price FROM OrderItems AS oi INNER JOIN Orders AS o ON oi.orderRef=o.id WHERE o.user_id=:user LIMIT :offset, :count");
+    $qtotal = $db->prepare("SELECT count(*) as total FROM OrderItems WHERE user_id=:user");
     $stmt->bindValue(":user", $user, PDO::PARAM_STR);
     $qtotal->bindValue(":user", $user, PDO::PARAM_STR);
 }
@@ -57,8 +57,11 @@ $total_pages = ceil($total / $per_page);
 $stmt->execute();
 $orders = $stmt->fetchALL(PDO::FETCH_ASSOC);
 
+
+
 ?>
-<h3><?= !has_role("Admin") ? get_username()."'s" : "" ?> Purchase History</h3>
+<h3><?= $user != null ? get_username($user)."'s" : "" ?> Purchase History</h3>
+<?php if($user != null && has_role("Admin")): ?><a href="./history.php?">view all</a><?php endif; ?>
 <div class="results mt-3">
     <?php if (count($orders) > 0): ?>
     <table class="table">
@@ -79,7 +82,7 @@ $orders = $stmt->fetchALL(PDO::FETCH_ASSOC);
             <?php foreach ($orders as $order): ?>
             <tr>
                 <?php if(has_role("Admin")): ?>
-                <td scope="row"><b><?= safer_echo(get_username($order["user_id"])); ?></b> </td>
+                <td scope="row"><a href="./history.php?id=<?= safer_echo($order["user_id"]);?>"><?=get_username($order["user_id"])?></a> </td>
                 <?php endif; ?>
                 <td scope="row"><b><?= get_product_name($order["product_id"]); ?></b> </td>
                 <td scope="row"><?= safer_echo($order["quantity"]); ?></td>
