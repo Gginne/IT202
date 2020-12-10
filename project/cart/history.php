@@ -33,12 +33,12 @@ $stmt = null;
 $qtotal = null;
 if(has_role("Admin") && $user == null){
     #SELECT ALL ORDERS
-    $stmt = $db->prepare("SELECT o.created, o.address, o.payment_method, oi.product_id, oi.quantity, oi.unit_price FROM OrderItems AS oi INNER JOIN Orders AS o ON oi.orderRef=o.id LIMIT :offset, :count");
+    $stmt = $db->prepare("SELECT o.created, o.user_id, o.address, o.payment_method, oi.product_id, oi.quantity, oi.unit_price FROM OrderItems AS oi INNER JOIN Orders AS o ON oi.orderRef=o.id LIMIT :offset, :count");
     $qtotal = $db->prepare("SELECT count(*) as total FROM OrdersItems");
 } else{
     #SELECT USER'S ORDERS
-    $stmt = $db->prepare("SELECT o.created, o.address, o.payment_method, oi.product_id, oi.quantity, oi.unit_price FROM OrderItems AS oi INNER JOIN Orders AS o ON oi.orderRef=o.id WHERE user_id = :user LIMIT :offset, :count");
-    $qtotal = $db->prepare("SELECT count(*) as total FROM OrderItems WHERE user_id=:user");
+    $stmt = $db->prepare("SELECT o.created, o.address, o.payment_method, oi.product_id, oi.quantity, oi.unit_price FROM OrderItems AS oi INNER JOIN Orders AS o ON oi.orderRef=o.id WHERE o.user_id=:user LIMIT :offset, :count");
+    $qtotal = $db->prepare("SELECT count(*) as total FROM OrderItems WHERE o.user_id=:user");
     $stmt->bindValue(":user", $user, PDO::PARAM_STR);
     $qtotal->bindValue(":user", $user, PDO::PARAM_STR);
 }
@@ -58,7 +58,7 @@ $stmt->execute();
 $orders = $stmt->fetchALL(PDO::FETCH_ASSOC);
 
 ?>
-<h3><?= !has_role("Admin") ? get_username()."'s" : "" ?> Order History</h3>
+<h3><?= !has_role("Admin") ? get_username()."'s" : "" ?> Purchase History</h3>
 <div class="results mt-3">
     <?php if (count($orders) > 0): ?>
     <table class="table">
@@ -78,10 +78,15 @@ $orders = $stmt->fetchALL(PDO::FETCH_ASSOC);
         <tbody>
             <?php foreach ($orders as $order): ?>
             <tr>
+                <?php if(has_role("Admin")): ?>
+                <td scope="row"><b><?= safer_echo(get_username($order["user_id"])); ?></b> </td>
+                <?php endif; ?>
                 <td scope="row"><b><?= get_product_name($order["product_id"]); ?></b> </td>
                 <td scope="row"><?= safer_echo($order["quantity"]); ?></td>
                 <td scope="row">$<?php safer_echo($order["unit_price"]*$order["quantity"]); ?></td>
-                
+                <td scope="row"><?php safer_echo($order["payment_method"]); ?></td>
+                <td scope="row"><?php safer_echo($order["created"]); ?></td>
+                <td scope="row"><?php safer_echo($order["address"]); ?></td>
             </tr>
             <?php endforeach; ?>
             <tbody>
