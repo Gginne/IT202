@@ -41,6 +41,9 @@
         <a class="nav-link" href="<?php echo getURL("cart/my_cart.php");?>">My Cart</a>
       </li>
       <li class="nav-item">
+        <a class="nav-link" href="<?php echo getURL("cart/history.php");?>">History</a>
+      </li>
+      <li class="nav-item">
         <a class="nav-link" href="<?php echo getURL("profile.php");?>">Profile</a>
       </li>
       <li class="nav-item">

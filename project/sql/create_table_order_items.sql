@@ -10,5 +10,6 @@ CREATE TABLE IF NOT EXISTS `OrderItems`
     created     TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 	primary key (id),
 	foreign key (user_id) references Users(id),
-	foreign key (product_id) references Products(id)
+	foreign key (product_id) references Products(id),
+	foreign key (orderRef) references Orders(id)
 )
