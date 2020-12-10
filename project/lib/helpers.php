@@ -120,7 +120,7 @@ function is_visible($prod_id){
     $stmt = $db->prepare("SELECT visibility, quantity FROM Products WHERE id = :prod_id");
     $r = $stmt->execute([":prod_id" => $prod_id]);
     $prod = $stmt->fetch(PDO::FETCH_ASSOC);
-    if(($prod["visibility"] == 1 || has_role("Admin")) && $prod["quantity"] > 0){
+    if(($prod["visibility"] == 1 && $prod["quantity"] > 0) || has_role("Admin") ){
         return True;
     }
 

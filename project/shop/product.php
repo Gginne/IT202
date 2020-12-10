@@ -7,7 +7,7 @@ if (isset($_GET["id"])) {
 }
 
 if (!is_visible($_GET["id"])){
-    flash("Item nor available");
+    flash("Item not available");
     die(header("Location: catalog.php"));
 }
 ?>
