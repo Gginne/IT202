@@ -108,7 +108,7 @@ if (isset($_POST["search"]) || empty($query)) {
                     <div class="card my-3">
                         <div class="card-body">
                             <h5 class="card-title"><?php safer_echo($r["name"]); ?></h5>
-                            <p class="card-text lead"><b>$<?php safer_echo($r["price"]); ?></b> <?= is_logged_in() ? '<small class="float-right text-muted">'.in_cart($r["id"]).' in cart</small>' : "" ?></p>
+                            <p class="card-text lead"><b>$<?php safer_echo($r["price"]); ?></b> <?= is_logged_in() ? '<small class="float-right text-muted">'.(in_stock($r["id"]) > 0 ? in_cart($r["id"]).' in cart' : "Out of Stock")."</small>" : "" ?></p>
                             <div>
                                 <?php if(is_logged_in()): ?>
                                     <button class="btn btn-white border border-dark" onClick="addOneToCart(<?php safer_echo($r['id']); ?>, <?= in_cart($r['id'])+1; ?>)"

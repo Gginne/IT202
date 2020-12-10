@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS `OrderItems`
 	product_id int,
 	user_id int,
 	quantity int,
-	unit_price int,
+	unit_price decimal(12, 2) default 0.00,
 	orderRef int, -- this will be a manually handled id to group order items together
     modified    TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP on update current_timestamp,
     created     TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,

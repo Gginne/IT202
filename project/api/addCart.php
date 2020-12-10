@@ -12,17 +12,21 @@ if (isset($_POST["id"])) {
     $id = $_POST["id"];
 }
 
-if(isset($_POST["qt"])){
-    $qt = $_POST["qt"];
-    if(is_numeric($id) && ($qt < 0 || $qt > in_stock($id))){
-        flash("Invalid cart quantity");
-        die(header("Location: ../cart/my_cart.php"));
-    }
-}
-
 $price = get_product_price($id);
 $user = get_user_id();
 $name = get_product_name($id);
+
+if(isset($_POST["qt"])){
+    $qt = $_POST["qt"];
+    if(is_numeric($id) && ($qt < 0 || $qt > in_stock($id))){
+        $errMsg = "Cannot add $qt $name to cart only ".in_stock($id)." in stock";
+        $response = ["status" => 400, "error" => $errMsg];
+        echo json_encode($response);
+        die();
+    }
+}
+
+
 
 $cart = [
     "name" => $name,
@@ -34,8 +38,6 @@ $cart = [
 
 $db = getDB();
 $r = null;
-
-//Clear Cart
 
 
 if($qt > 0) {
