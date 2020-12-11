@@ -21,10 +21,30 @@ if (isset($id)) {
     $r = $stmt->execute([":id" => $id]);
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
     if (!$result) {
-        $e = $stmt->errorInfo();
-        flash($e[2]);
+        flash("Error fetching product");
     }
 }
+
+
+if(isset($_POST["review"])){
+    $comment = isset($_POST["comment"]) ? $_POST["comment"] : "";
+    $rating = isset($_POST["rating"]) ? $_POST["rating"] : "";
+    $stmt = $db->prepare("INSERT INTO Ratings (product_id, rating, comment, user_id) VALUES(:product, :rating, :comment, :user) on duplicate key update comment=:comment, rating=:rating");
+    $r = $stmt->execute([
+        ":product" => $id,
+        ":rating" => $rating,
+        ":comment" => $comment,
+        ":user" => get_user_id()
+    ]);
+    if($r){
+        flash("New rating posted");
+    } else{
+        flash("Something went wrong, rating not posted");
+    }
+}
+
+//$stmt = $db->prepare("SELECT rating, comment, user_id FROM Ratings");
+
 ?>
 <?php if (isset($result) && !empty($result)): ?>
     <div class="jumbotron bg-white border border-secondary">
@@ -53,7 +73,7 @@ if (isset($id)) {
         <div class="p-2">
             <form method="POST">
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="rating" id="rt-1" value="1">
+                    <input class="form-check-input" type="radio" name="rating" id="rt-1" value="1" checked>
                     <label class="form-check-label" for="rt-1">1</label>
                 </div>
                 <div class="form-check form-check-inline">
@@ -75,12 +95,12 @@ if (isset($id)) {
                 <div class="form-group my-2">
                     <textarea class="form-control" id="comment" name="comment" rows="2" cols="10" placeholder="write a comment..."></textarea>
                 </div>
-                <input type="submit" class="btn btn-warning" value="Post Review" />
+                <input type="submit" class="btn btn-warning" name="review" value="Post Review" />
             </form>
         </div>
-        <?php else; ?>
+        <?php endif; ?>
         <div class="card-body">
-            
+
         </div>
     </div>
 <?php else: ?>
