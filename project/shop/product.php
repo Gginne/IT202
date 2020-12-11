@@ -43,6 +43,45 @@ if (isset($id)) {
         <hr class="my-4">
         <p><?= $result["description"] ?></p>
         
+       
+    </div>
+    <div class="card">
+        <div class="card-header">
+            Reviews & Ratings
+        </div>
+        <?php if(is_logged_in()): ?>
+        <div class="p-2">
+            <form method="POST">
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="rating" id="rt-1" value="1">
+                    <label class="form-check-label" for="rt-1">1</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="rating" id="rt-2" value="2">
+                    <label class="form-check-label" for="rt-2">2</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="rating" id="rt-3" value="3" >
+                    <label class="form-check-label" for="rt-3">3</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="rating" id="rt-4" value="4" >
+                    <label class="form-check-label" for="rt-4">4</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="rating" id="rt-5" value="5" >
+                    <label class="form-check-label" for="rt-5">5</label>
+                </div>
+                <div class="form-group my-2">
+                    <textarea class="form-control" id="comment" name="comment" rows="2" cols="10" placeholder="write a comment..."></textarea>
+                </div>
+                <input type="submit" class="btn btn-warning" value="Post Review" />
+            </form>
+        </div>
+        <?php else; ?>
+        <div class="card-body">
+            
+        </div>
     </div>
 <?php else: ?>
     <p>Error looking up id...</p>
