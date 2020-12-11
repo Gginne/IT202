@@ -44,7 +44,7 @@ if(isset($_POST["review"])){
 }
 $total = 0;
 $page = 1;
-$per_page = 8;
+$per_page = 10;
 if(isset($_GET["page"])){
     try {
         $page = (int)$_GET["page"];
@@ -56,11 +56,24 @@ if(isset($_GET["page"])){
 $myComment = "";
 $myRating = 0;
 
-$qString = "SELECT rating, comment, user_id FROM Ratings WHERE product_id=:id LIMIT 10";
-$qTotal = "SELECT count(*) as total from Ratings";
+$qString = "SELECT rating, comment, user_id FROM Ratings WHERE product_id=:id LIMIT :offset, :count";
+$qTotal = "SELECT count(*) as total from Ratings WHERE product_id=:id";
+
+$stmt = $db->prepare($qTotal);
+$stmt->bindValue(":id", $id, PDO::PARAM_INT);
+$stmt->execute();
+$res = $stmt->fetch(PDO::FETCH_ASSOC);
+
+$total = (int)$res["total"];
+$total_pages = ceil($total / $per_page);
+$offset = ($page-1) * $per_page;
 
 $stmt = $db->prepare($qString);
-$stmt->execute([":id" => $id]);
+$stmt->bindValue(":offset", $offset, PDO::PARAM_INT);
+$stmt->bindValue(":count", $per_page, PDO::PARAM_INT);
+$stmt->bindValue(":id", $id, PDO::PARAM_INT);
+$stmt->execute();
+
 $reviews = $stmt->fetchALL(PDO::FETCH_ASSOC);
 
 foreach($reviews as $rev){
@@ -86,9 +99,7 @@ foreach($reviews as $rev){
             </div>
             <?php endif; ?>     
         <hr class="my-4">
-        <p><?= $result["description"] ?></p>
-        
-       
+        <p><?= $result["description"] ?></p>          
     </div>
     <div class="card">
         <div class="card-header">
@@ -118,7 +129,7 @@ foreach($reviews as $rev){
                     <label class="form-check-label" for="rt-5">5</label>
                 </div>
                 <div class="form-group my-2">
-                    <textarea class="form-control" id="comment" name="comment" rows="2" cols="10" placeholder="write a comment..."><?= $myComment ?></textarea>
+                    <textarea class="form-control" id="comment" name="comment" rows="2" cols="10" placeholder="write a comment..."><?php safer_echo($myComment) ?></textarea>
                 </div>
                 <input type="submit" class="btn btn-warning float-right" name="review" value="Post Review" />
             </form>
@@ -127,14 +138,27 @@ foreach($reviews as $rev){
         <?php endif; ?>
         <div class="card-body">
             <?php foreach($reviews as $rev):?>
-                <h4><?= $rev["user_id"] == get_user_id() ? get_username() : get_username($rev["user_id"]) ?></h4>
+                <h5><?= $rev["user_id"] == get_user_id() ? get_username() : get_username($rev["user_id"]) ?></h5>
                 <?php foreach (range(1, (int)$rev["rating"]) as $star): ?>
                     <i class="fas fa-star text-warning mb-2"></i>
                 <?php endforeach; ?>
-                <p><?= $rev["comment"];?></p>
+                <p><?php safer_echo($rev["comment"]);?></p>
                 <hr class="my-2">
             <?php endforeach; ?>
         </div>
+        <nav aria-label="My Reviews">
+            <ul class="pagination justify-content-center">
+                <li class="page-item <?php echo ($page-1) < 1?"disabled":"";?>">
+                    <a class="page-link" href="<?= "?id=$id&page=".($page-1);?>" tabindex="-1">Previous</a>
+                </li>
+                <?php for($i = 0; $i < $total_pages; $i++):?>
+                <li class="page-item <?php echo ($page-1) == $i?"active":"";?>"><a class="page-link" href="<?= "?id=$id&page=".($i+1);?>"><?php echo ($i+1);?></a></li>
+                <?php endfor; ?>
+                <li class="page-item <?php echo ($page+1) >= $total_pages?"disabled":"";?>">
+                    <a class="page-link" href="<?= "?id=$id&page=".($page+1);?>">Next</a>
+                </li>
+            </ul>
+        </nav>
     </div>
 <?php else: ?>
     <p>Error looking up id...</p>

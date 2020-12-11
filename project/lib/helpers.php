@@ -122,6 +122,19 @@ function in_cart($prod_id){
     return 0;
 }
 
+function has_purchased($prod_id){
+    $db = getDB();
+    $stmt = $db->prepare("SELECT count(*) as total FROM OrderItems WHERE product_id = :prod_id and user_id = :user");
+    $r = $stmt->execute([
+        ":prod_id" => $prod_id,
+        ":user" => get_user_id()
+    ]);
+
+    $res = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $res["total"];
+    
+}
+
 function is_visible($prod_id){
     $db = getDB();
     $stmt = $db->prepare("SELECT visibility, quantity FROM Products WHERE id = :prod_id");
