@@ -42,8 +42,33 @@ if(isset($_POST["review"])){
         flash("Something went wrong, rating not posted");
     }
 }
+$total = 0;
+$page = 1;
+$per_page = 8;
+if(isset($_GET["page"])){
+    try {
+        $page = (int)$_GET["page"];
+    }
+    catch(Exception $e){
+    }
+}
 
-//$stmt = $db->prepare("SELECT rating, comment, user_id FROM Ratings");
+$myComment = 1;
+$myRating = "";
+
+$qString = "SELECT rating, comment, user_id FROM Ratings LIMIT 10";
+$qTotal = "SELECT count(*) as total from Ratings";
+
+$stmt = $db->prepare($qString);
+$stmt->execute();
+$reviews = $stmt->fetchALL(PDO::FETCH_ASSOC);
+
+foreach($reviews as $rev){
+    if($rev["user_id"] == get_user_id()){
+        $myComment = $rev["comment"];
+        $myRating = $rev["rating"];
+    }
+}
 
 ?>
 <?php if (isset($result) && !empty($result)): ?>
@@ -73,34 +98,38 @@ if(isset($_POST["review"])){
         <div class="p-2">
             <form method="POST">
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="rating" id="rt-1" value="1" checked>
+                    <input class="form-check-input" type="radio" name="rating" id="rt-1" value="1" <?= $myRating == 1 ? "checked" : "" ?>>
                     <label class="form-check-label" for="rt-1">1</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="rating" id="rt-2" value="2">
+                    <input class="form-check-input" type="radio" name="rating" id="rt-2" value="2" <?= $myRating == 2 ? "checked" : "" ?>>
                     <label class="form-check-label" for="rt-2">2</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="rating" id="rt-3" value="3" >
+                    <input class="form-check-input" type="radio" name="rating" id="rt-3" value="3" <?= $myRating == 3 ? "checked" : "" ?>>
                     <label class="form-check-label" for="rt-3">3</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="rating" id="rt-4" value="4" >
+                    <input class="form-check-input" type="radio" name="rating" id="rt-4" value="4" <?= $myRating == 4 ? "checked" : "" ?>>
                     <label class="form-check-label" for="rt-4">4</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="rating" id="rt-5" value="5" >
+                    <input class="form-check-input" type="radio" name="rating" id="rt-5" value="5" <?= $myRating == 5 ? "checked" : "" ?>>
                     <label class="form-check-label" for="rt-5">5</label>
                 </div>
                 <div class="form-group my-2">
-                    <textarea class="form-control" id="comment" name="comment" rows="2" cols="10" placeholder="write a comment..."></textarea>
+                    <textarea class="form-control" id="comment" name="comment" rows="2" cols="10" placeholder="write a comment..."><?= $myComment ?></textarea>
                 </div>
                 <input type="submit" class="btn btn-warning" name="review" value="Post Review" />
             </form>
         </div>
+        <hr class="my-3">
         <?php endif; ?>
         <div class="card-body">
-
+            <?php foreach($reviews as $rev):?>
+                <p class="lead"><?= $rev["rating"]." stars";?> <?= $rev["comment"];?></p>
+                <hr class="my-2">
+            <?php endforeach; ?>
         </div>
     </div>
 <?php else: ?>
