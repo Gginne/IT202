@@ -53,14 +53,14 @@ if(isset($_GET["page"])){
     }
 }
 
-$myComment = 1;
-$myRating = "";
+$myComment = "";
+$myRating = 0;
 
-$qString = "SELECT rating, comment, user_id FROM Ratings LIMIT 10";
+$qString = "SELECT rating, comment, user_id FROM Ratings WHERE product_id=:id LIMIT 10";
 $qTotal = "SELECT count(*) as total from Ratings";
 
 $stmt = $db->prepare($qString);
-$stmt->execute();
+$stmt->execute([":id" => $id]);
 $reviews = $stmt->fetchALL(PDO::FETCH_ASSOC);
 
 foreach($reviews as $rev){
@@ -120,14 +120,18 @@ foreach($reviews as $rev){
                 <div class="form-group my-2">
                     <textarea class="form-control" id="comment" name="comment" rows="2" cols="10" placeholder="write a comment..."><?= $myComment ?></textarea>
                 </div>
-                <input type="submit" class="btn btn-warning" name="review" value="Post Review" />
+                <input type="submit" class="btn btn-warning float-right" name="review" value="Post Review" />
             </form>
         </div>
-        <hr class="my-3">
+        <hr class="my-2">
         <?php endif; ?>
         <div class="card-body">
             <?php foreach($reviews as $rev):?>
-                <p class="lead"><?= $rev["rating"]." stars";?> <?= $rev["comment"];?></p>
+                <h4><?= $rev["user_id"] == get_user_id() ? get_username() : get_username($rev["user_id"]) ?></h4>
+                <?php foreach (range(1, (int)$rev["rating"]) as $star): ?>
+                    <i class="fas fa-star text-warning mb-2"></i>
+                <?php endforeach; ?>
+                <p><?= $rev["comment"];?></p>
                 <hr class="my-2">
             <?php endforeach; ?>
         </div>
