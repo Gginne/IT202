@@ -8,10 +8,10 @@ if (!is_logged_in()) {
 ?>
 <?php
 $page = 1;
-$per_page = 6;
+$per_page = 8;
 $orders = [];
 $total = 0;
-$offset = ($page-1) * $per_page;
+
 $user = null;
 if(isset($_GET["page"])){
     try {
@@ -42,7 +42,7 @@ if(has_role("Admin") && $user == null){
     $stmt->bindValue(":user", $user, PDO::PARAM_STR);
     $qtotal->bindValue(":user", $user, PDO::PARAM_STR);
 }
-
+$offset = ($page-1) * $per_page;
 $stmt->bindValue(":offset", $offset, PDO::PARAM_INT);
 $stmt->bindValue(":count", $per_page, PDO::PARAM_INT);
 
@@ -96,16 +96,16 @@ $orders = $stmt->fetchALL(PDO::FETCH_ASSOC);
        
     </table>
        
-    <nav aria-label="Orders">
+    <nav aria-label="Purchases">
         <ul class="pagination justify-content-center">
             <li class="page-item <?php echo ($page-1) < 1?"disabled":"";?>">
-                <a class="page-link" href="?page=<?php echo $page-1;?>" tabindex="-1">Previous</a>
+                <a class="page-link" href=<?= has_role("Admin") && $user != null ? "?id=$user&page=".($page-1) : "?page=".($page-1); ?> tabindex="-1">Previous</a>
             </li>
             <?php for($i = 0; $i < $total_pages; $i++):?>
-            <li class="page-item <?php echo ($page-1) == $i?"active":"";?>"><a class="page-link" href="?page=<?php echo ($i+1);?>"><?php echo ($i+1);?></a></li>
+            <li class="page-item <?php echo ($page-1) == $i?"active":"";?>"><a class="page-link" href=<?= has_role("Admin") && $user != null ? "?id=$user&page=".($i+1) : "?page=".($i+1); ?>><?php echo ($i+1);?></a></li>
             <?php endfor; ?>
             <li class="page-item <?php echo ($page+1) >= $total_pages?"disabled":"";?>">
-                <a class="page-link" href="?page=<?php echo $page+1;?>">Next</a>
+                <a class="page-link" href=<?= has_role("Admin") && $user != null ? "?id=$user&page=".($page+1) : "?page=".($page+1); ?> >Next</a>
             </li>
         </ul>
     </nav>
