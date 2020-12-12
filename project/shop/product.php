@@ -26,7 +26,7 @@ if (isset($id)) {
 }
 
 
-if(isset($_POST["review"])){
+if(isset($_POST["rate"])){
     $comment = isset($_POST["comment"]) ? $_POST["comment"] : "";
     $rating = isset($_POST["rating"]) ? $_POST["rating"] : "";
     $stmt = $db->prepare("INSERT INTO Ratings (product_id, rating, comment, user_id) VALUES(:product, :rating, :comment, :user) on duplicate key update comment=:comment, rating=:rating");
@@ -105,7 +105,7 @@ foreach($reviews as $rev){
         <div class="card-header">
             Reviews & Ratings
         </div>
-        <?php if(is_logged_in()): ?>
+        <?php if(is_logged_in() && has_purchased($id) > 0): ?>
         <div class="p-2">
             <form method="POST">
                 <div class="form-check form-check-inline">
@@ -131,7 +131,7 @@ foreach($reviews as $rev){
                 <div class="form-group my-2">
                     <textarea class="form-control" id="comment" name="comment" rows="2" cols="10" placeholder="write a comment..."><?php safer_echo($myComment) ?></textarea>
                 </div>
-                <input type="submit" class="btn btn-warning float-right" name="review" value="Post Review" />
+                <input type="submit" class="btn btn-warning float-right" name="rate" value="Post Review" />
             </form>
         </div>
         <hr class="my-2">
@@ -146,7 +146,7 @@ foreach($reviews as $rev){
                 <hr class="my-2">
             <?php endforeach; ?>
         </div>
-        <nav aria-label="My Reviews">
+        <nav aria-label="My Ratings">
             <ul class="pagination justify-content-center">
                 <li class="page-item <?php echo ($page-1) < 1?"disabled":"";?>">
                     <a class="page-link" href="<?= "?id=$id&page=".($page-1);?>" tabindex="-1">Previous</a>
