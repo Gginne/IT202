@@ -54,7 +54,7 @@ if(isset($_POST["checkout"])){
       ":user" => get_user_id()
   ]);
   if ($r) {
-      flash("Order succesfully processed");
+      flash("Order succesfully processed, cart cleared");
       $confirm = true;
   } else {
       flash("There was an error in order processing");
@@ -88,7 +88,7 @@ if(isset($_POST["checkout"])){
       <?php endforeach; ?>
       <li class="list-group-item d-flex justify-content-between lh-condensed">
           <div>
-            <h6 class="my-0">Total Cost</h6>
+            <h6 class="my-0">Final Cost</h6>
           </div>
           <span class="text-muted">$<?= $total; ?></span>
         </li>
@@ -187,9 +187,10 @@ if(isset($_POST["checkout"])){
                 if (json) {
                     if (json.status == 200) {
                         alert("Successful purchase for the amout of $<?= $total; ?>");
-                        window.location.href = "../shop/catalog.php"
+                        window.location.href = "./my_cart.php"
                     } else {
                         alert(json.error);
+                        window.location.href = "./my_cart.php"
                     }
                 }
             }
@@ -211,9 +212,10 @@ if(isset($_POST["checkout"])){
                 if (json) {
                     if (json.status == 200) {
                         alert(json.msg);
-                        window.location.href = "../shop/catalog.php"
+                        window.location.href = "./my_cart.php"
                     } else {
                         alert(json.error);
+                        location.reload();
                     }
                 }
             }
@@ -228,5 +230,4 @@ if(isset($_POST["checkout"])){
     
 </script>
 <?php endif; ?>
-
 <?php require_once(__DIR__ . "/../partials/footer.php"); ?>

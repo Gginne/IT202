@@ -22,6 +22,7 @@ if(isset($_GET["page"])){
     }
 }
 
+
 $db = getDB();
 $stmt = $db->prepare("SELECT count(*) as total, SUM(price*quantity) as cost FROM Carts c WHERE c.user_id = :user");
 $stmt->execute([
@@ -169,5 +170,5 @@ if($r){
 
     }
 </script>
-
+<?php require(__DIR__ . "/../partials/flash.php"); ?>
 <?php require_once(__DIR__ . "/../partials/footer.php"); ?>
