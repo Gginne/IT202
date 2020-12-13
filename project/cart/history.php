@@ -49,12 +49,11 @@ if (isset($_POST["date_filter"])) {
     } else if ($range == "month"){
         $t = "MONTH, -1,"; 
     } else if ($range == "year") {
-        $t = "MONTH, -1,"; 
+        $t = "YEAR, -1,"; 
     }
     if($range != ""){
         $date = "oi.created BETWEEN TIMESTAMPADD($t CURRENT_TIMESTAMP()) AND CURRENT_TIMESTAMP()";
     }
-    
 }
 
 if (isset($_POST["price_filter"])) {
@@ -83,13 +82,14 @@ $stmt->bindValue(":count", $per_page, PDO::PARAM_INT);
 $stmt->bindValue(":c", "%$category%", PDO::PARAM_STR);
 $qtotal->bindValue(":c", "%$category%", PDO::PARAM_STR);
 
-$qtotal->execute();
-
+$r = $qtotal->execute();
 $res = $qtotal->fetch(PDO::FETCH_ASSOC);
 
-$total = $res["total"];
-$cost = $res["cost"];
-$total_pages = ceil($total / $per_page);
+if($r){
+    $total = $res["total"];
+    $cost = $res["cost"];
+    $total_pages = ceil($total / $per_page);
+}
 
 $r = $stmt->execute();
 $orders = $stmt->fetchALL(PDO::FETCH_ASSOC);
@@ -131,7 +131,12 @@ $orders = $stmt->fetchALL(PDO::FETCH_ASSOC);
             <input class="btn btn-primary text-white" type="submit" value="Filter" name="filter"/>
     </span>
     
+    <div class="form-group ml-auto">
+       <label for="cart-total"><b>Total Purchase Cost:  </b></label>
+       <input class="form-control mx-2" style="max-width: 7rem;" name="cart-total" id="cart-total" type="text" value="$<?= $cost ?>" readonly>
+    </div>
 </form>
+
 <div class="results mt-3">
     <?php if (count($orders) > 0): ?>
     <table class="table">
