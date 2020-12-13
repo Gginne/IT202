@@ -17,7 +17,7 @@ $user = null;
 $category = "";
 $price = "";
 $order = "";
-$date = "o.created=o.created";
+$date = "oi.created=oi.created";
 $range = "";
 
 if(isset($_GET["page"])){
@@ -52,7 +52,7 @@ if (isset($_POST["date_filter"])) {
         $t = "MONTH, -1,"; 
     }
     if($range != ""){
-        $date = "o.created BETWEEN TIMESTAMPADD($t CURRENT_TIMESTAMP()) AND CURRENT_TIMESTAMP()";
+        $date = "oi.created BETWEEN TIMESTAMPADD($t CURRENT_TIMESTAMP()) AND CURRENT_TIMESTAMP()";
     }
     
 }
@@ -68,19 +68,20 @@ $stmt = null;
 $qtotal = null;
 if(has_role("Admin") && $user == null){
     #SELECT ALL ORDERS
-    $stmt = $db->prepare("SELECT o.created, o.user_id, o.address, o.payment_method, oi.product_id, oi.quantity, oi.unit_price FROM OrderItems AS oi INNER JOIN Orders AS o ON oi.orderRef=o.id WHERE $date $price LIMIT :offset, :count");
-    $qtotal = $db->prepare("SELECT count(*) as total, sum(unit_price*quantity) as cost FROM OrderItems");
+    $stmt = $db->prepare("SELECT p.categories, o.created, o.user_id, o.address, o.payment_method, oi.product_id, oi.quantity, oi.unit_price FROM OrderItems AS oi JOIN Orders AS o ON oi.orderRef=o.id JOIN Products AS p ON oi.product_id=p.id  WHERE p.categories like :c AND $date $price LIMIT :offset, :count");
+    $qtotal = $db->prepare("SELECT count(*) as total, sum(oi.unit_price*oi.quantity) as cost FROM OrderItems AS oi JOIN Products AS p ON oi.product_id=p.id WHERE p.categories like :c AND $date");
 } else{
     #SELECT USER'S ORDERS
-    $stmt = $db->prepare("SELECT o.created, o.user_id, o.address, o.payment_method, oi.product_id, oi.quantity, oi.unit_price FROM OrderItems AS oi INNER JOIN Orders AS o ON oi.orderRef=o.id WHERE o.user_id=:user AND $date $price LIMIT :offset, :count");
-    $qtotal = $db->prepare("SELECT count(*) as total, sum(unit_price*quantity) as cost FROM OrderItems WHERE user_id=:user");
+    $stmt = $db->prepare("SELECT p.categories, o.created, o.user_id, o.address, o.payment_method, oi.product_id, oi.quantity, oi.unit_price FROM OrderItems AS oi JOIN Orders AS o ON oi.orderRef=o.id JOIN Products AS p ON oi.product_id=p.id WHERE o.user_id=:user AND p.categories like :c AND $date $price LIMIT :offset, :count");
+    $qtotal = $db->prepare("SELECT count(*) as total, sum(oi.unit_price*oi.quantity) as cost FROM OrderItems AS oi JOIN Products AS p ON oi.product_id=p.id WHERE user_id=:user AND p.categories like :c AND $date");
     $stmt->bindValue(":user", $user, PDO::PARAM_STR);
     $qtotal->bindValue(":user", $user, PDO::PARAM_STR);
 }
 $offset = ($page-1) * $per_page;
 $stmt->bindValue(":offset", $offset, PDO::PARAM_INT);
 $stmt->bindValue(":count", $per_page, PDO::PARAM_INT);
-
+$stmt->bindValue(":c", "%$category%", PDO::PARAM_STR);
+$qtotal->bindValue(":c", "%$category%", PDO::PARAM_STR);
 
 $qtotal->execute();
 
@@ -121,6 +122,8 @@ $orders = $stmt->fetchALL(PDO::FETCH_ASSOC);
                 <option value="sneakers" <?php echo ($category == "sneakers" ? 'selected="selected"' : ''); ?> >Sneakers</option>
                 <option value="shoes" <?php echo ($category == "shoes" ? 'selected="selected"' : ''); ?> >Shoes</option>
                 <option value="velcro" <?php echo ($category == "velcro" ? 'selected="selected"' : ''); ?> >Velcro</option>
+                <option value="boots" <?php echo ($category == "boots" ? 'selected="selected"' : ''); ?> >Boots</option>
+                <option value="flip-flops" <?php echo ($category == "flip-flops" ? 'selected="selected"' : ''); ?> >Flip-Flops</option>
         </select>
         <?php endif; ?>
         </div>

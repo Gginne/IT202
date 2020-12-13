@@ -88,6 +88,8 @@ if (isset($_POST["search"]) || empty($query)) {
                 <option value="sneakers" <?php echo ($category == "sneakers" ? 'selected="selected"' : ''); ?> >Sneakers</option>
                 <option value="shoes" <?php echo ($category == "shoes" ? 'selected="selected"' : ''); ?> >Shoes</option>
                 <option value="velcro" <?php echo ($category == "velcro" ? 'selected="selected"' : ''); ?> >Velcro</option>
+                <option value="boots" <?php echo ($category == "boots" ? 'selected="selected"' : ''); ?> >Boots</option>
+                <option value="flip-flops" <?php echo ($category == "flip-flops" ? 'selected="selected"' : ''); ?> >flip-flops</option>
         </select>
         
         </div>
