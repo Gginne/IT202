@@ -154,7 +154,7 @@ foreach($reviews as $rev){
                 <?php for($i = 0; $i < $total_pages; $i++):?>
                 <li class="page-item <?php echo ($page-1) == $i?"active":"";?>"><a class="page-link" href="<?= "?id=$id&page=".($i+1);?>"><?php echo ($i+1);?></a></li>
                 <?php endfor; ?>
-                <li class="page-item <?php echo ($page+1) >= $total_pages?"disabled":"";?>">
+                <li class="page-item <?php echo ($page+1) > $total_pages?"disabled":"";?>">
                     <a class="page-link" href="<?= "?id=$id&page=".($page+1);?>">Next</a>
                 </li>
             </ul>

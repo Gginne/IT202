@@ -88,6 +88,8 @@ if (isset($_POST["search"]) || empty($query)) {
                 <option value="sneakers" <?php echo ($category == "sneakers" ? 'selected="selected"' : ''); ?> >Sneakers</option>
                 <option value="shoes" <?php echo ($category == "shoes" ? 'selected="selected"' : ''); ?> >Shoes</option>
                 <option value="velcro" <?php echo ($category == "velcro" ? 'selected="selected"' : ''); ?> >Velcro</option>
+                <option value="boots" <?php echo ($category == "boots" ? 'selected="selected"' : ''); ?> >Boots</option>
+                <option value="flip-flops" <?php echo ($category == "flip-flops" ? 'selected="selected"' : ''); ?> >flip-flops</option>
         </select>
         
         </div>
@@ -125,7 +127,7 @@ if (isset($_POST["search"]) || empty($query)) {
     <?php else: ?>
         <p>No results</p>
     <?php endif; ?>
-    <nav aria-label="My Eggs">
+    <nav aria-label="Products">
             <ul class="pagination justify-content-center">
                 <li class="page-item <?php echo ($page-1) < 1?"disabled":"";?>">
                     <a class="page-link" href="?page=<?php echo $page-1;?>" tabindex="-1">Previous</a>
@@ -133,7 +135,7 @@ if (isset($_POST["search"]) || empty($query)) {
                 <?php for($i = 0; $i < $total_pages; $i++):?>
                 <li class="page-item <?php echo ($page-1) == $i?"active":"";?>"><a class="page-link" href="?page=<?php echo ($i+1);?>"><?php echo ($i+1);?></a></li>
                 <?php endfor; ?>
-                <li class="page-item <?php echo ($page+1) >= $total_pages?"disabled":"";?>">
+                <li class="page-item <?php echo ($page+1) > $total_pages?"disabled":"";?>">
                     <a class="page-link" href="?page=<?php echo $page+1;?>">Next</a>
                 </li>
             </ul>
