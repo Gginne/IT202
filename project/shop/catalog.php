@@ -34,8 +34,9 @@ if (isset($_POST["rate_filter"])) {
 
 if (isset($_POST["quantity_filter"])) {
     $quantity = $_POST["quantity_filter"];
-    $filter .=  "AND p.quantity <= $quantity ";
-    
+    if($quantity != ""){
+        $filter .=  "AND p.quantity <= $quantity ";
+    }
     
 }
 
@@ -134,13 +135,14 @@ if (isset($_POST["search"]) || empty($query)) {
         <?php if(has_role("Admin")): ?>
         <select class="form-control mx-1" id="quantity" name="quantity_filter" value="">
                 <option value="" <?php echo ($quantity == null ? 'selected="selected"' : ''); ?>>All Quantities</option>
-                <option value="0" <?php echo ($quantity != null && $quantity == 0 ? 'selected="selected"' : ''); ?> >0</option>
-                <option value="5" <?php echo ($quantity != null && $quantity <= 5 ? 'selected="selected"' : ''); ?> ><= 5</option>
-                <option value="10" <?php echo ($quantity != null && $quantity <= 10 ? 'selected="selected"' : ''); ?> ><= 10</option>
-                <option value="20" <?php echo ($quantity != null && $quantity <= 20 ? 'selected="selected"' : ''); ?> ><= 20</option>
-                <option value="40" <?php echo ($quantity != null && $quantity <= 40 ? 'selected="selected"' : ''); ?> ><= 40</option>
-                <option value="60" <?php echo ($quantity != null && $quantity <= 60 ? 'selected="selected"' : ''); ?> ><= 60</option>
-                <option value="100" <?php echo ($quantity != null && $quantity <= 100  ? 'selected="selected"' : ''); ?> ><= 100</option>
+                <option value="0" <?php echo ($quantity != null && $quantity == 0 ? 'selected="selected"' : ''); ?> >Out of stock</option>
+                <option value="1" <?php echo ($quantity == 1 ? 'selected="selected"' : ''); ?> >1 or less</option>
+                <option value="5" <?php echo ($quantity == 5 ? 'selected="selected"' : ''); ?> >5 or less</option>
+                <option value="10" <?php echo ($quantity == 10 ? 'selected="selected"' : ''); ?> >10 or less</option>
+                <option value="20" <?php echo ($quantity == 20 ? 'selected="selected"' : ''); ?> >20 or less</option>
+                <option value="40" <?php echo ($quantity == 40 ? 'selected="selected"' : ''); ?> >40 or less</option>
+                <option value="60" <?php echo ($quantity == 60 ? 'selected="selected"' : ''); ?> >60 or less</option>
+                <option value="100" <?php echo ($quantity == 100  ? 'selected="selected"' : ''); ?> >100 or less</option>
         </select>
         <?php endif; ?>
         </div>
