@@ -10,6 +10,10 @@ $total = 0;
 $page = 1;
 $per_page = 8;
 
+$rating = null;
+
+$quantity = null;
+
 if (isset($_POST["query"])) {
     $query = $_POST["query"];
 }
@@ -18,10 +22,28 @@ if (isset($_POST["cat_filter"])) {
     $category = $_POST["cat_filter"];
 }
 
+if (isset($_POST["rate_filter"])) {
+    $rating = $_POST["rate_filter"];
+    if($rating != ""){
+        $num = (int)$rating[0];
+        $comp = strlen($rating) == 2 ? "<=" : "=";
+        $filter .=  "AND average_r $comp $num ";
+    }
+    
+}
+
+if (isset($_POST["quantity_filter"])) {
+    $quantity = $_POST["quantity_filter"];
+    $filter .=  "AND p.quantity <= $quantity ";
+    
+    
+}
+
 if (isset($_POST["price_filter"])) {
     $order = $_POST["price_filter"];
     $filter .=  "ORDER BY price $order";
 }
+
 
 if(isset($_GET["page"])){
     try {
@@ -32,14 +54,19 @@ if(isset($_GET["page"])){
     }
 }
 
-
 if (isset($_POST["search"]) || empty($query)) {
     $db = getDB();
-    $qString = "SELECT id, name, quantity, price, description, user_id from Products WHERE visibility = 1 and name like :q and categories like :c $filter LIMIT :offset, :count";
-    $qTotal = "SELECT count(*) as total from Products p WHERE p.visibility = 1 and p.name like :q and p.categories like :c";
+    $qString = "SELECT p.id, p.name, p.quantity, p.price, p.description, p.user_id, IFNULL(r.average_r, 0) average_r
+                FROM Products as p LEFT JOIN (SELECT r.product_id, AVG(r.rating) average_r FROM Ratings r GROUP BY r.product_id) r ON p.id=r.product_id  
+                WHERE visibility = 1 and name like :q and categories like :c $filter LIMIT :offset, :count";
+
+    $qTotal = "SELECT count(*) as total from Products p WHERE p.visibility = 1 and p.name like :q and p.categories like :c $filter";
     if(has_role("Admin")){
-        $qString = "SELECT id, name, quantity, price, description, user_id from Products WHERE name like :q and categories like :c $filter LIMIT :offset, :count";
-        $qTotal = "SELECT count(*) as total from Products p WHERE p.name like :q and p.categories like :c"; 
+        $qString = "SELECT p.id, p.name, p.quantity, p.price, p.description, p.user_id, IFNULL(r.average_r, 0) average_r
+        FROM Products as p LEFT JOIN (SELECT r.product_id, AVG(r.rating) average_r FROM Ratings r GROUP BY r.product_id) r ON p.id=r.product_id
+        WHERE name like :q and categories like :c $filter LIMIT :offset, :count";
+
+        $qTotal = "SELECT count(*) as total from Products p WHERE p.name like :q and p.categories like :c $filter"; 
     }  
 
     $stmt = $db->prepare($qTotal);
@@ -75,27 +102,50 @@ if (isset($_POST["search"]) || empty($query)) {
 }
 
 ?>
-<form method="POST" class="mx-auto mb-3" style="width: 60rem;">
+<form method="POST" class="mx-auto mb-3" style="width: 70rem;">
     <div class="input-group">
-        <div class="input-group-prepend">
+        <div class="input-group-prepend w-50">
         <select class="form-control mx-1" id="price" name="price_filter" value="">
-                <option value="">By Price</option>
+                <option value="">All Prices</option>
                 <option value="ASC" <?php echo ($order == "ASC" ? 'selected="selected"' : ''); ?> >Ascending</option>
                 <option value="DESC" <?php echo ($order == "DESC" ? 'selected="selected"' : ''); ?> >Descending</option>
         </select>
         <select class="form-control mx-1" id="category" name="cat_filter" value="">
-                <option value="">By Category</option>
+                <option value="">All Categories</option>
                 <option value="sneakers" <?php echo ($category == "sneakers" ? 'selected="selected"' : ''); ?> >Sneakers</option>
                 <option value="shoes" <?php echo ($category == "shoes" ? 'selected="selected"' : ''); ?> >Shoes</option>
                 <option value="velcro" <?php echo ($category == "velcro" ? 'selected="selected"' : ''); ?> >Velcro</option>
                 <option value="boots" <?php echo ($category == "boots" ? 'selected="selected"' : ''); ?> >Boots</option>
                 <option value="flip-flops" <?php echo ($category == "flip-flops" ? 'selected="selected"' : ''); ?> >flip-flops</option>
         </select>
-        
+        <select class="form-control mx-1" id="rating" name="rate_filter" value="">
+                <option value="" <?php echo ($rating ==  null ? 'selected="selected"' : ''); ?> >All Ratings</option>
+                <option value="1" <?php echo ($rating == "1" ? 'selected="selected"' : ''); ?> >1 Star Only</option>
+                <option value="1b" <?php echo ($rating == "1b" ? 'selected="selected"' : ''); ?> >1 Star & Below</option>
+                <option value="2" <?php echo ($rating == "2" ? 'selected="selected"' : ''); ?> >2 Stars Only</option>
+                <option value="2b" <?php echo ($rating == "2b" ? 'selected="selected"' : ''); ?> >2 Stars & Below</option>
+                <option value="3" <?php echo ($rating == "3" ? 'selected="selected"' : ''); ?> >3 Stars Only</option>
+                <option value="3b" <?php echo ($rating == "3b" ? 'selected="selected"' : ''); ?> >3 Stars & Below</option>
+                <option value="4" <?php echo ($rating == "4" ? 'selected="selected"' : ''); ?> >4 Stars Only</option>
+                <option value="4b" <?php echo ($rating == "4b" ? 'selected="selected"' : ''); ?> >4 Stars & Below</option>
+                <option value="5" <?php echo ($rating == "5" ? 'selected="selected"' : ''); ?> >5 Stars Only</option>
+                <option value="0" <?php echo ($rating != null && $rating == 0 ? 'selected="selected"' : ''); ?> >Not Rated</option>
+        </select>
+        <?php if(has_role("Admin")): ?>
+        <select class="form-control mx-1" id="quantity" name="quantity_filter" value="">
+                <option value="" <?php echo ($quantity == null ? 'selected="selected"' : ''); ?>>All Quantities</option>
+                <option value="0" <?php echo ($quantity != null && $quantity == 0 ? 'selected="selected"' : ''); ?> >0</option>
+                <option value="5" <?php echo ($quantity != null && $quantity <= 5 ? 'selected="selected"' : ''); ?> ><= 5</option>
+                <option value="10" <?php echo ($quantity != null && $quantity <= 10 ? 'selected="selected"' : ''); ?> ><= 10</option>
+                <option value="20" <?php echo ($quantity != null && $quantity <= 20 ? 'selected="selected"' : ''); ?> ><= 20</option>
+                <option value="40" <?php echo ($quantity != null && $quantity <= 40 ? 'selected="selected"' : ''); ?> ><= 40</option>
+                <option value="60" <?php echo ($quantity != null && $quantity <= 60 ? 'selected="selected"' : ''); ?> ><= 60</option>
+                <option value="100" <?php echo ($quantity != null && $quantity <= 100  ? 'selected="selected"' : ''); ?> ><= 100</option>
+        </select>
+        <?php endif; ?>
         </div>
         <input class="form-control mx-2" name="query" placeholder="Enter Product..." value="<?php safer_echo($query); ?>"/>
         <span class="input-group-btn">
-
             <input class="btn btn-primary text-white" type="submit" value="Search" name="search"/>
         </span>
     </div>     
@@ -109,7 +159,7 @@ if (isset($_POST["search"]) || empty($query)) {
                     <div class="col-sm-3">
                     <div class="card my-3">
                         <div class="card-body">
-                            <h5 class="card-title"><?php safer_echo($r["name"]); ?></h5>
+                            <h5 class="card-title"><?php safer_echo($r["name"]); ?> </h5>
                             <p class="card-text lead"><b>$<?php safer_echo($r["price"]); ?></b> <?= is_logged_in() ? '<small class="float-right text-muted">'.(in_stock($r["id"]) > 0 ? in_cart($r["id"]).' in cart' : "Out of Stock")."</small>" : "" ?></p>
                             <div>
                                 <?php if(is_logged_in()): ?>
