@@ -105,7 +105,7 @@ if (isset($_POST["search"]) || empty($query)) {
 ?>
 <form method="POST" class="mx-auto mb-3" style="width: 70rem;">
     <div class="input-group">
-        <div class="input-group-prepend w-50">
+        <div class="input-group-prepend w-75">
         <select class="form-control mx-1" id="price" name="price_filter" value="">
                 <option value="">All Prices</option>
                 <option value="ASC" <?php echo ($order == "ASC" ? 'selected="selected"' : ''); ?> >Ascending</option>
@@ -130,7 +130,6 @@ if (isset($_POST["search"]) || empty($query)) {
                 <option value="4" <?php echo ($rating == "4" ? 'selected="selected"' : ''); ?> >4 Stars Only</option>
                 <option value="4b" <?php echo ($rating == "4b" ? 'selected="selected"' : ''); ?> >4 Stars & Below</option>
                 <option value="5" <?php echo ($rating == "5" ? 'selected="selected"' : ''); ?> >5 Stars Only</option>
-                <option value="0" <?php echo ($rating != null && $rating == 0 ? 'selected="selected"' : ''); ?> >Not Rated</option>
         </select>
         <?php if(has_role("Admin")): ?>
         <select class="form-control mx-1" id="quantity" name="quantity_filter" value="">
