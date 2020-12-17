@@ -85,6 +85,8 @@ $qtotal->bindValue(":c", "%$category%", PDO::PARAM_STR);
 $r = $qtotal->execute();
 $res = $qtotal->fetch(PDO::FETCH_ASSOC);
 
+
+$total_pages = 0;
 if($r){
     $total = $res["total"];
     $cost = $res["cost"];

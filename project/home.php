@@ -13,13 +13,13 @@ if (!is_logged_in()){
 $db = getDB();
 $liked = [];
 $recent = [];
-$qLiked= "SELECT p.id, p.name, p.quantity, p.price, p.description, p.user_id, r.rating FROM Products p
+$qLiked= "SELECT p.id, p.name, p.quantity, p.price,  p.user_id, r.rating FROM Products p
           LEFT JOIN Ratings r ON p.id=r.product_id 
           WHERE r.user_id=:id ORDER BY r.rating DESC LIMIT 4";
 
-$qRecent = "SELECT p.id, p.name, p.quantity, p.price, p.description, p.user_id FROM Products p
+$qRecent = "SELECT p.id, p.name, oi.quantity, oi.created, p.price, p.user_id FROM Products p
             LEFT JOIN OrderItems oi ON p.id=oi.product_id 
-            WHERE oi.user_id=:id ORDER BY oi.created DESC LIMIT 4";
+            WHERE oi.user_id=:id ORDER BY oi.created  DESC LIMIT 8";
 
 $stmt = $db->prepare($qLiked);
 $stmt->execute([":id" => get_user_id()]);
@@ -56,7 +56,7 @@ $recent = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <?php endfor; ?>
                             <small class="float-right text-muted">My Rating</small>
                             <p class="card-text lead"><b>$<?php safer_echo($l["price"]); ?></b> </p>
-                            <a class="btn btn-block btn-white border border-dark" href="product.php?id=<?php safer_echo($l['id']); ?>">More</a>
+                            <a class="btn btn-block btn-white border border-dark" href="product.php?id=<?php safer_echo($l['id']); ?>">View</a>
                         </span>
                     </div>
                 </div>
@@ -72,7 +72,23 @@ $recent = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <small>Not Purchases Yet</small>
         <?php else: ?>
             <?php foreach ($recent as $r): ?>
-                
+            <div class="col-sm-3 mb-4">
+                <div class="card">
+                    <small class="ml-auto px-2"><?php safer_echo($r["created"]); ?></small>
+                    <div class="card-body">
+                        <h5 class="card-title mb-1"><?php safer_echo($r["name"]); ?> </h5>
+                        
+                            
+                        <p class="card-text lead">
+                            <b>$<?php safer_echo($r["price"]*$r["quantity"]); ?></b>     
+                            <small class="float-right text-muted"><?php safer_echo($r["quantity"]); ?> bought</small>
+                        </p>
+                     
+                        <a class="btn btn-block btn-white border border-dark" href="product.php?id=<?php safer_echo($r['id']); ?>">View</a>
+                    
+                    </div>
+                </div>
+            </div>
             <?php endforeach; ?>
         <?php endif; ?>
     </div>
