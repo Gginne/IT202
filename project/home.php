@@ -56,7 +56,7 @@ $recent = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <?php endfor; ?>
                             <small class="float-right text-muted">My Rating</small>
                             <p class="card-text lead"><b>$<?php safer_echo($l["price"]); ?></b> </p>
-                            <a class="btn btn-block btn-white border border-dark" href="product.php?id=<?php safer_echo($l['id']); ?>">View</a>
+                            <a class="btn btn-block btn-white border border-dark" href="./shop/product.php?id=<?php safer_echo($l['id']); ?>">View</a>
                         </span>
                     </div>
                 </div>
@@ -80,11 +80,11 @@ $recent = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         
                             
                         <p class="card-text lead">
-                            <b>$<?php safer_echo($r["price"]*$r["quantity"]); ?></b>     
+                            <b>$<?php safer_echo($r["price"]*$r["quantity"]); ?> Total</b>     
                             <small class="float-right text-muted"><?php safer_echo($r["quantity"]); ?> bought</small>
                         </p>
                      
-                        <a class="btn btn-block btn-white border border-dark" href="product.php?id=<?php safer_echo($r['id']); ?>">View</a>
+                        <a class="btn btn-block btn-white border border-dark" href="./shop/product.php?id=<?php safer_echo($r['id']); ?>">View</a>
                     
                     </div>
                 </div>

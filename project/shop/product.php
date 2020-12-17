@@ -56,7 +56,7 @@ if(isset($_GET["page"])){
 $myComment = "";
 $myRating = 0;
 
-$qString = "SELECT rating, comment, user_id FROM Ratings WHERE product_id=:id LIMIT :offset, :count";
+$qString = "SELECT rating, comment, user_id FROM Ratings WHERE product_id=:id ORDER BY created DESC LIMIT :offset, :count";
 $qTotal = "SELECT count(*) as total from Ratings WHERE product_id=:id";
 
 $stmt = $db->prepare($qTotal);

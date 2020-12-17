@@ -72,7 +72,7 @@ if(has_role("Admin") && $user == null){
 } else{
     #SELECT USER'S ORDERS
     $stmt = $db->prepare("SELECT p.categories, o.created, o.user_id, o.address, o.payment_method, oi.product_id, oi.quantity, oi.unit_price FROM OrderItems AS oi JOIN Orders AS o ON oi.orderRef=o.id JOIN Products AS p ON oi.product_id=p.id WHERE o.user_id=:user AND p.categories like :c AND $date $price LIMIT :offset, :count");
-    $qtotal = $db->prepare("SELECT count(*) as total, sum(oi.unit_price*oi.quantity) as cost FROM OrderItems AS oi JOIN Products AS p ON oi.product_id=p.id WHERE user_id=:user AND p.categories like :c AND $date");
+    $qtotal = $db->prepare("SELECT count(*) as total, sum(oi.unit_price*oi.quantity) as cost FROM OrderItems AS oi JOIN Products AS p ON oi.product_id=p.id WHERE oi.user_id=:user AND p.categories like :c AND $date");
     $stmt->bindValue(":user", $user, PDO::PARAM_STR);
     $qtotal->bindValue(":user", $user, PDO::PARAM_STR);
 }
@@ -86,12 +86,11 @@ $r = $qtotal->execute();
 $res = $qtotal->fetch(PDO::FETCH_ASSOC);
 
 
-$total_pages = 0;
-if($r){
-    $total = $res["total"];
-    $cost = $res["cost"];
-    $total_pages = ceil($total / $per_page);
-}
+
+$total = $res["total"];
+$cost = $res["cost"];
+$total_pages = ceil($total / $per_page);
+
 
 $r = $stmt->execute();
 $orders = $stmt->fetchALL(PDO::FETCH_ASSOC);
