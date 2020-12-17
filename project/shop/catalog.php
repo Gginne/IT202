@@ -173,7 +173,7 @@ if (isset($_POST["search"]) || empty($query)) {
                                     <i class="fas fa-star text-muted mb-2"></i>
                                 <?php endif; ?>
                             <?php endfor; ?>
-                            
+                            </span>
                             <p class="card-text lead"><b>$<?php safer_echo($r["price"]); ?></b> <?= is_logged_in() ? '<small class="float-right text-muted">'.(in_stock($r["id"]) > 0 ? in_cart($r["id"]).' in cart' : "Out of Stock")."</small>" : "" ?></p>
                             <div>
                                 <?php if(is_logged_in()): ?>
