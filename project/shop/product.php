@@ -94,7 +94,6 @@ foreach($reviews as $rev){
                 
                 <span class="input-group-btn">
                     <button class="btn btn-primary" onClick="addToCart(<?= $id;?>)">Add to Cart</button>
-                    <button class="btn btn-danger" onClick="makePurchase()">Buy</button>
                 </span>  
             </div>
             <?php endif; ?>     
@@ -137,13 +136,23 @@ foreach($reviews as $rev){
         <hr class="my-2">
         <?php endif; ?>
         <div class="card-body">
-            <?php foreach($reviews as $rev):?>
-                <h5><?= $rev["user_id"] == get_user_id() ? get_username() : get_username($rev["user_id"]) ?></h5>
-                <?php foreach (range(1, (int)$rev["rating"]) as $star): ?>
+            <?php if($myRating > 0) :?>
+                <h5>You</h5>
+                <?php foreach (range(1, $myRating) as $star): ?>
                     <i class="fas fa-star text-warning mb-2"></i>
                 <?php endforeach; ?>
-                <p><?php safer_echo($rev["comment"]);?></p>
+                <p><?php safer_echo($myComment);?></p>
                 <hr class="my-2">
+            <?php endif; ?>
+            <?php foreach($reviews as $rev):?>
+                <?php if($rev["user_id"] != get_user_id()):?>
+                    <h5><?= is_public($rev["user_id"]) == 1 ? get_username($rev["user_id"]) : "Anonymous" ?></h5>
+                    <?php foreach (range(1, (int)$rev["rating"]) as $star): ?>
+                        <i class="fas fa-star text-warning mb-2"></i>
+                    <?php endforeach; ?>
+                    <p><?php safer_echo($rev["comment"]);?></p>
+                    <hr class="my-2">
+                <?php endif; ?>
             <?php endforeach; ?>
         </div>
         <nav aria-label="My Ratings">
@@ -165,10 +174,6 @@ foreach($reviews as $rev){
 <?php endif; ?>
 <script>
 
-    function makePurchase(){
-        alert("TBD")
-    }  
-    
     function addToCart(id) {
         let qt = Number(document.getElementById("quantity").value)
         //https://www.w3schools.com/xml/ajax_xmlhttprequest_send.asp

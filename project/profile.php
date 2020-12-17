@@ -9,10 +9,23 @@ if (!is_logged_in()) {
 
 $db = getDB();
 //save data if we submitted the form
+
+$user = null;
+$edit = true;
+if(isset($_GET["id"]) && has_role("Admin") && is_public($_GET["id"])){
+    $user = $_GET["id"];
+    $edit = false;
+} else if(!has_role("Admin")){
+    $user = get_user_id();
+}
+
+$visibility = is_public($user);
+
 if (isset($_POST["saved"])) {
     $isValid = true;
     //check if our email changed
     $newEmail = get_email();
+    $visibility = $_POST["visibility"];
     if (get_email() != $_POST["email"]) {
         //TODO we'll need to check if the email is available
         $email = $_POST["email"];
@@ -62,8 +75,9 @@ if (isset($_POST["saved"])) {
         }
     }
     if ($isValid) {
-        $stmt = $db->prepare("UPDATE Users set email = :email, username= :username where id = :id");
-        $r = $stmt->execute([":email" => $newEmail, ":username" => $newUsername, ":id" => get_user_id()]);
+        $newVisibility = $_POST["visibility"];
+        $stmt = $db->prepare("UPDATE Users set email = :email, username= :username, visibility= :visibility where id = :id");
+        $r = $stmt->execute([":email" => $newEmail, ":username" => $newUsername, ":visibility" => $newVisibility, ":id" => $user]);
         if ($r) {
             flash("Updated profile");
         }
@@ -90,12 +104,13 @@ if (isset($_POST["saved"])) {
             }
         }
 //fetch/select fresh data in case anything changed
-        $stmt = $db->prepare("SELECT email, username from Users WHERE id = :id LIMIT 1");
+        $stmt = $db->prepare("SELECT email, username, visibility from Users WHERE id = :id LIMIT 1");
         $stmt->execute([":id" => get_user_id()]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($result) {
             $email = $result["email"];
             $username = $result["username"];
+            $visibility = $result["username"];
             //let's update our session too
             $_SESSION["user"]["email"] = $email;
             $_SESSION["user"]["username"] = $username;
@@ -108,26 +123,42 @@ if (isset($_POST["saved"])) {
 
 
 ?>
-<h2><?= get_username()."'s" ?> profile</h2>
+<h2><?= get_username($user)."'s" ?> profile</h2>
 <br>
 <form method="POST">
   <div class="form-group">
     <label for="email">Email:</label>
-    <input type="email" class="form-control" id="email" name="email" maxlength="100" value="<?php safer_echo(get_email()); ?>" required>
+    <input type="email" class="form-control" id="email" name="email" maxlength="100" value="<?php safer_echo(get_email()); ?>" required <?= !$edit ? "readonly" : ""?>>
   </div>
   <div class="form-group">
     <label for="user">Username:</label>
-    <input type="text" class="form-control" id="user" name="username" maxlength="60" value="<?php safer_echo(get_username()); ?>" required>
+    <input type="text" class="form-control" id="user" name="username" maxlength="60" value="<?php safer_echo(get_username()); ?>" required <?= !$edit ? "readonly" : ""?>>
   </div>
   <div class="form-group">
     <label for="p1">Password:</label>
-    <input type="password" class="form-control" id="p1" name="password" minlength="6" maxlength="60" required>
+    <input type="password" class="form-control" id="p1" name="password" minlength="6" maxlength="60" required <?= !$edit ? "readonly" : ""?>>
   </div>
   <div class="form-group">
     <label for="p2">Confirm Password:</label>
-    <input type="password" class="form-control" id="p2" name="confirm" minlength="6" maxlength="60" required>
+    <input type="password" class="form-control" id="p2" name="confirm" minlength="6" maxlength="60" required <?= !$edit ? "readonly" : ""?>>
   </div>
-  <input type="submit" class="btn btn-primary" name="saved" value="Save Profile"/>
+  <div class="form-group">
+		<div class="form-check">
+			<input class="form-check-input" type="radio" name="visibility" id="visibility" value="1" <?php echo $visibility == 1 ? "checked": "";?> <?= !$edit ? "readonly" : ""?>>
+			<label class="form-check-label" for="visibility">
+				Public
+			</label>
+		</div>
+		<div class="form-check">
+			<input class="form-check-input" type="radio" name="visibility" id="visibility" value="0" <?php echo $visibility == 0 ? "checked": "";?> <?= !$edit ? "readonly" : ""?>>
+			<label class="form-check-label" for="visibility">
+				Private
+			</label>
+		</div>
+	</div>
+    <?php if($edit): ?>
+        <input type="submit" class="btn btn-primary" name="saved" value="Save Profile"/>
+    <?php endif; ?>
 </form>
 
 

@@ -97,6 +97,19 @@ function get_product_name($id){
     return null;
 }
 
+function is_public($id=null){
+    $db = getDB();
+    $stmt = $db->prepare("SELECT visibility from Users where id=:id");
+    if($id == null){
+        $stmt->execute([":id" => get_user_id()]);
+    } else {
+        $stmt->execute([":id" => $id]);
+    }
+    
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $result["visibility"];
+}
+
 function in_stock($id){
     $db = getDB();
     $stmt = $db->prepare("SELECT quantity FROM Products WHERE id = :id");
