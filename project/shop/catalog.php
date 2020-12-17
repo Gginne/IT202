@@ -160,7 +160,20 @@ if (isset($_POST["search"]) || empty($query)) {
                     <div class="col-sm-3">
                     <div class="card my-3">
                         <div class="card-body">
-                            <h5 class="card-title"><?php safer_echo($r["name"]); ?> </h5>
+                            <h5 class="card-title my-1"><?php safer_echo($r["name"]); ?> </h5>
+                            <span>
+                            <?php for($star=1; $star<=5; $star++): ?>
+                                <?php if($r["average_r"] - $star > 0 && $r["average_r"] - $star < 1): ?>
+                                    <i class="fas fa-star text-warning mb-2"></i>
+                                    <i class="fas fa-star-half text-warning mb-2"></i>
+                                    <?php $star+=1;?>
+                                <?php elseif($r["average_r"] - $star >= 0): ?>
+                                    <i class="fas fa-star text-warning mb-2"></i>
+                                <?php else: ?>
+                                    <i class="fas fa-star text-muted mb-2"></i>
+                                <?php endif; ?>
+                            <?php endfor; ?>
+                            
                             <p class="card-text lead"><b>$<?php safer_echo($r["price"]); ?></b> <?= is_logged_in() ? '<small class="float-right text-muted">'.(in_stock($r["id"]) > 0 ? in_cart($r["id"]).' in cart' : "Out of Stock")."</small>" : "" ?></p>
                             <div>
                                 <?php if(is_logged_in()): ?>
