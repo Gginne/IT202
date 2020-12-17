@@ -10,8 +10,17 @@ if (!is_logged_in()) {
 $db = getDB();
 //save data if we submitted the form
 
+$user = null;
+$edit = true;
+if(isset($_GET["id"]) && has_role("Admin")){
+    $user = $_GET["id"];
+    $edit = false;
+} else if(!has_role("Admin")){
+    $user = get_user_id();
+}
 
-$visibility = is_public();
+$visibility = is_public($user);
+
 if (isset($_POST["saved"])) {
     $isValid = true;
     //check if our email changed
