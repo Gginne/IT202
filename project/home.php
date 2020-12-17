@@ -13,7 +13,7 @@ if (!is_logged_in()){
 $db = getDB();
 $liked = [];
 $recent = [];
-$qLiked= "SELECT p.id, p.name, p.quantity, p.price, p.description, p.user_id FROM Products p
+$qLiked= "SELECT p.id, p.name, p.quantity, p.price, p.description, p.user_id, r.rating FROM Products p
           LEFT JOIN Ratings r ON p.id=r.product_id 
           WHERE r.user_id=:id ORDER BY r.rating DESC LIMIT 4";
 
@@ -36,7 +36,7 @@ $recent = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <div class="container mt-4">
     <!-- # MOST LIKED -->
-    <p class="lead">MOST LIKED</p>
+    <p class="lead">BEST RATED PURCHASES</p>
     <div class="row my-4">
         <?php if (empty($liked)): ?>
             <small>Not Purchases Rated</small>
@@ -46,6 +46,18 @@ $recent = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title my-1"><?php safer_echo($l["name"]); ?> </h5>
+                        <span>
+                            <?php for($star=1; $star<=5; $star++): ?>
+                                <?php if($l["rating"] - $star >= 0): ?>
+                                    <i class="fas fa-star text-warning mb-2"></i>
+                                <?php else: ?>
+                                    <i class="fas fa-star text-muted mb-2"></i>
+                                <?php endif; ?>
+                            <?php endfor; ?>
+                            <small class="float-right text-muted">My Rating</small>
+                            <p class="card-text lead"><b>$<?php safer_echo($l["price"]); ?></b> </p>
+                            <a class="btn btn-block btn-white border border-dark" href="product.php?id=<?php safer_echo($l['id']); ?>">More</a>
+                        </span>
                     </div>
                 </div>
             </div>
