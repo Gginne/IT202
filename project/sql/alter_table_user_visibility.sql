@@ -1,0 +1,2 @@
+ALTER TABLE Users
+    ADD COLUMN visibility TINYINT DEFAULT 1;
