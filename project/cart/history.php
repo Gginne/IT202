@@ -94,8 +94,6 @@ if($r){
 $r = $stmt->execute();
 $orders = $stmt->fetchALL(PDO::FETCH_ASSOC);
 
-
-
 ?>
 <h3><?= $user != null ? get_username($user)."'s" : "All" ?> Purchases </h3>
 <?php if($user != null && has_role("Admin")): ?><a href="./history.php?">view all</a><?php endif; ?>
@@ -110,11 +108,11 @@ $orders = $stmt->fetchALL(PDO::FETCH_ASSOC);
         <?php if(has_role("Admin")): ?>
         <select class="form-control mx-1" id="date" name="date_filter" value="">
                 <option value="">By Date</option>
-                <option value="hour" <?php echo ($range == "hour" ? 'selected="selected"' : ''); ?> >Past Hour</option>
-                <option value="day" <?php echo ($range == "day" ? 'selected="selected"' : ''); ?> >Past Day</option>
-                <option value="week" <?php echo ($range == "week" ? 'selected="selected"' : ''); ?> >Past Week</option>
-                <option value="month" <?php echo ($range == "month" ? 'selected="selected"' : ''); ?> >Past Month</option>
-                <option value="year" <?php echo ($range == "year" ? 'selected="selected"' : ''); ?> >Past Year</option>
+                <option value="hour" <?php echo ($range == "hour" ? 'selected="selected"' : ''); ?> >Last Hour</option>
+                <option value="day" <?php echo ($range == "day" ? 'selected="selected"' : ''); ?> >Last Day</option>
+                <option value="week" <?php echo ($range == "week" ? 'selected="selected"' : ''); ?> >Last Week</option>
+                <option value="month" <?php echo ($range == "month" ? 'selected="selected"' : ''); ?> >Last Month</option>
+                <option value="year" <?php echo ($range == "year" ? 'selected="selected"' : ''); ?> >Last Year</option>
                 
         </select>
         <select class="form-control mx-1" id="category" name="cat_filter" value="">
